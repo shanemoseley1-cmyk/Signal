@@ -9,1732 +9,967 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <style>
   :root {
-    --bg: #07080a;
-    --bg2: #0d0f12;
-    --bg3: #111418;
-    --bg4: #161b21;
-    --border: rgba(255,255,255,0.07);
-    --border2: rgba(255,255,255,0.12);
-    --text: #e8e6e0;
-    --muted: #6b7280;
-    --muted2: #4b5563;
-    --accent: #c8f06a;
-    --accent2: #a3d94a;
-    --accent-dim: rgba(200,240,106,0.12);
-    --accent-glow: rgba(200,240,106,0.06);
-    --red: #f87171;
-    --red-dim: rgba(248,113,113,0.12);
-    --amber: #fbbf24;
-    --amber-dim: rgba(251,191,36,0.12);
-    --blue: #60a5fa;
-    --blue-dim: rgba(96,165,250,0.12);
-    --teal: #2dd4bf;
-    --teal-dim: rgba(45,212,191,0.1);
-    --font-mono: 'DM Mono', monospace;
-    --font-display: 'Syne', sans-serif;
-    --font-body: 'DM Sans', sans-serif;
-    --r: 8px;
+    --bg:#07080a;--bg2:#0d0f12;--bg3:#111418;--bg4:#161b21;
+    --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);
+    --text:#e8e6e0;--muted:#6b7280;--muted2:#4b5563;
+    --accent:#c8f06a;--accent-dim:rgba(200,240,106,0.12);
+    --red:#f87171;--red-dim:rgba(248,113,113,0.12);
+    --amber:#fbbf24;--amber-dim:rgba(251,191,36,0.12);
+    --blue:#60a5fa;--blue-dim:rgba(96,165,250,0.12);
+    --teal:#2dd4bf;
+    --font-mono:'DM Mono',monospace;--font-display:'Syne',sans-serif;--font-body:'DM Sans',sans-serif;
+    --r:8px;
   }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
-
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--font-body);
-    font-size: 14px;
-    line-height: 1.6;
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
-
-  /* Scanline overlay */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
-    pointer-events: none;
-    z-index: 1000;
-  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:14px;line-height:1.6;min-height:100vh;overflow-x:hidden;}
+  body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px);pointer-events:none;z-index:1000;}
 
   /* HEADER */
-  .header {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background: rgba(7,8,10,0.92);
-    backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--border);
-    padding: 0 24px;
-    height: 56px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .logo {
-    font-family: var(--font-display);
-    font-size: 20px;
-    font-weight: 800;
-    letter-spacing: 0.12em;
-    color: var(--accent);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .logo-dot { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; animation: pulse 2s infinite; }
-  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.8)} }
-
-  .header-meta {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-  }
-  .live-badge {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    padding: 3px 8px;
-    background: var(--accent-dim);
-    color: var(--accent);
-    border: 1px solid rgba(200,240,106,0.2);
-    border-radius: 4px;
-    letter-spacing: 0.1em;
-  }
-  .header-date {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    color: var(--muted);
-  }
-  .header-nav { display: flex; gap: 4px; }
-  .nav-btn {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    padding: 5px 12px;
-    background: transparent;
-    border: 1px solid var(--border2);
-    border-radius: var(--r);
-    color: var(--muted);
-    cursor: pointer;
-    transition: all 0.2s;
-    letter-spacing: 0.05em;
-  }
-  .nav-btn:hover, .nav-btn.active { background: var(--bg3); color: var(--text); border-color: var(--border2); }
-  .nav-btn.active { color: var(--accent); border-color: rgba(200,240,106,0.3); }
+  .header{position:sticky;top:0;z-index:100;background:rgba(7,8,10,0.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;}
+  .logo{font-family:var(--font-display);font-size:20px;font-weight:800;letter-spacing:0.12em;color:var(--accent);display:flex;align-items:center;gap:10px;}
+  .logo-dot{width:8px;height:8px;background:var(--accent);border-radius:50%;animation:pulse 2s infinite;}
+  @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.8)}}
+  .header-meta{display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+  .live-badge{font-family:var(--font-mono);font-size:10px;padding:3px 8px;background:var(--accent-dim);color:var(--accent);border:1px solid rgba(200,240,106,0.2);border-radius:4px;letter-spacing:0.1em;}
+  .refresh-badge{font-family:var(--font-mono);font-size:10px;padding:3px 8px;background:var(--blue-dim);color:var(--blue);border:1px solid rgba(96,165,250,0.2);border-radius:4px;letter-spacing:0.06em;cursor:pointer;}
+  .refresh-badge:hover{background:rgba(96,165,250,0.2);}
+  .header-date{font-family:var(--font-mono);font-size:11px;color:var(--muted);}
+  .header-nav{display:flex;gap:4px;}
+  .nav-btn{font-family:var(--font-mono);font-size:11px;padding:5px 12px;background:transparent;border:1px solid var(--border2);border-radius:var(--r);color:var(--muted);cursor:pointer;transition:all 0.2s;letter-spacing:0.05em;}
+  .nav-btn:hover,.nav-btn.active{background:var(--bg3);color:var(--text);}
+  .nav-btn.active{color:var(--accent);border-color:rgba(200,240,106,0.3);}
+  .nav-btn.highlight{color:var(--accent);border-color:rgba(200,240,106,0.3);}
 
   /* TICKER TAPE */
-  .ticker-tape {
-    background: var(--bg2);
-    border-bottom: 1px solid var(--border);
-    padding: 0;
-    overflow: hidden;
-    height: 36px;
-    display: flex;
-    align-items: center;
-  }
-  .tape-inner {
-    display: flex;
-    align-items: center;
-    gap: 0;
-    animation: tape-scroll 60s linear infinite;
-    white-space: nowrap;
-  }
-  .tape-inner:hover { animation-play-state: paused; }
-  @keyframes tape-scroll { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
-  .tape-item {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    padding: 0 20px;
-    border-right: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    height: 36px;
-    cursor: default;
-  }
-  .tape-sym { color: var(--text); font-weight: 500; letter-spacing: 0.05em; }
-  .tape-price { color: var(--muted); }
-  .tape-chg.up { color: var(--accent); }
-  .tape-chg.dn { color: var(--red); }
+  .ticker-tape{background:var(--bg2);border-bottom:1px solid var(--border);overflow:hidden;height:36px;display:flex;align-items:center;}
+  .tape-track{display:flex;align-items:center;animation:tape-scroll 80s linear infinite;white-space:nowrap;}
+  .tape-track:hover{animation-play-state:paused;}
+  @keyframes tape-scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+  .tape-item{font-family:var(--font-mono);font-size:11px;padding:0 18px;border-right:1px solid var(--border);display:flex;align-items:center;gap:7px;height:36px;}
+  .tape-sym{color:var(--text);font-weight:500;}
+  .tape-price{color:var(--muted);}
+  .tape-chg.up{color:var(--accent);}
+  .tape-chg.dn{color:var(--red);}
 
-  /* MAIN LAYOUT */
-  .main { padding: 24px; max-width: 1600px; margin: 0 auto; }
+  /* MARKET STATUS */
+  .market-status{font-family:var(--font-mono);font-size:10px;padding:2px 8px;border-radius:4px;letter-spacing:0.06em;}
+  .status-open{background:rgba(200,240,106,0.15);color:var(--accent);border:1px solid rgba(200,240,106,0.25);}
+  .status-closed{background:var(--red-dim);color:var(--red);border:1px solid rgba(248,113,113,0.25);}
+  .status-pre{background:var(--amber-dim);color:var(--amber);border:1px solid rgba(251,191,36,0.25);}
+
+  /* MAIN */
+  .main{padding:24px;max-width:1600px;margin:0 auto;}
 
   /* SECTION HEADERS */
-  .section-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 16px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid var(--border);
-  }
-  .section-title {
-    font-family: var(--font-display);
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
-  .section-accent { color: var(--accent); }
-  .section-line { flex: 1; height: 1px; background: var(--border); }
+  .section-header{display:flex;align-items:center;gap:12px;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border);}
+  .section-title{font-family:var(--font-display);font-size:11px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);}
+  .section-accent{color:var(--accent);}
+  .section-line{flex:1;height:1px;background:var(--border);}
 
-  /* TOP METRICS ROW */
-  .metrics-row {
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 10px;
-    margin-bottom: 24px;
-  }
-  .metric-card {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: var(--r);
-    padding: 14px 16px;
-    position: relative;
-    overflow: hidden;
-    transition: border-color 0.2s;
-    cursor: default;
-  }
-  .metric-card:hover { border-color: var(--border2); }
-  .metric-card::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, rgba(255,255,255,0.02) 0%, transparent 60%);
-    pointer-events: none;
-  }
-  .metric-label {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    letter-spacing: 0.08em;
-    color: var(--muted);
-    text-transform: uppercase;
-    margin-bottom: 8px;
-  }
-  .metric-value {
-    font-family: var(--font-display);
-    font-size: 22px;
-    font-weight: 700;
-    color: var(--text);
-    line-height: 1;
-    margin-bottom: 4px;
-  }
-  .metric-sub {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    color: var(--muted);
-  }
-  .metric-chg {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    display: inline-flex;
-    align-items: center;
-    gap: 3px;
-    margin-top: 2px;
-  }
-  .up { color: var(--accent); }
-  .dn { color: var(--red); }
-  .neu { color: var(--amber); }
-  .metric-accent-bar {
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    height: 2px;
-  }
+  /* METRICS */
+  .metrics-row{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:24px;}
+  .metric-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;position:relative;overflow:hidden;transition:border-color 0.2s;}
+  .metric-card:hover{border-color:var(--border2);}
+  .metric-label{font-family:var(--font-mono);font-size:10px;letter-spacing:0.08em;color:var(--muted);text-transform:uppercase;margin-bottom:8px;}
+  .metric-value{font-family:var(--font-display);font-size:22px;font-weight:700;color:var(--text);line-height:1;margin-bottom:4px;}
+  .metric-chg{font-family:var(--font-mono);font-size:11px;display:inline-flex;align-items:center;gap:3px;margin-top:2px;}
+  .metric-sub{font-family:var(--font-mono);font-size:10px;color:var(--muted);margin-top:3px;}
+  .metric-accent-bar{position:absolute;bottom:0;left:0;right:0;height:2px;}
+  .up{color:var(--accent);}
+  .dn{color:var(--red);}
+  .neu{color:var(--amber);}
 
-  /* GRID LAYOUT */
-  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
-  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 24px; }
-  .grid-left-wide { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; margin-bottom: 24px; }
+  /* LAYOUT */
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;}
+  .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:24px;}
+  .grid-left-wide{display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:24px;}
 
   /* CARDS */
-  .card {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: var(--r);
-    overflow: hidden;
-  }
-  .card-header {
-    padding: 14px 18px;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .card-title {
-    font-family: var(--font-display);
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--text);
-  }
-  .card-tag {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    padding: 2px 8px;
-    border-radius: 4px;
-    letter-spacing: 0.05em;
-  }
-  .tag-active { background: rgba(200,240,106,0.15); color: var(--accent); border: 1px solid rgba(200,240,106,0.25); }
-  .tag-watch { background: var(--amber-dim); color: var(--amber); border: 1px solid rgba(251,191,36,0.25); }
-  .tag-emerging { background: var(--blue-dim); color: var(--blue); border: 1px solid rgba(96,165,250,0.25); }
-  .tag-risk { background: var(--red-dim); color: var(--red); border: 1px solid rgba(248,113,113,0.25); }
-  .card-body { padding: 16px 18px; }
-
-  /* TREND CARDS */
-  .trend-card {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: var(--r);
-    overflow: hidden;
-    margin-bottom: 12px;
-    transition: border-color 0.2s, transform 0.2s;
-    cursor: default;
-  }
-  .trend-card:hover { border-color: var(--border2); transform: translateY(-1px); }
-  .trend-header {
-    padding: 12px 16px;
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 12px;
-  }
-  .trend-left { flex: 1; }
-  .trend-name {
-    font-family: var(--font-display);
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text);
-    margin-bottom: 3px;
-  }
-  .trend-desc {
-    font-size: 12px;
-    color: var(--muted);
-    line-height: 1.5;
-  }
-  .trend-signal {
-    text-align: right;
-    flex-shrink: 0;
-  }
-  .signal-value {
-    font-family: var(--font-mono);
-    font-size: 20px;
-    font-weight: 500;
-    line-height: 1;
-  }
-  .signal-label {
-    font-family: var(--font-mono);
-    font-size: 9px;
-    color: var(--muted);
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-  }
-  .trend-tickers {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    padding: 0 16px 12px;
-  }
-  .ticker-chip {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    padding: 3px 8px;
-    background: var(--bg3);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    color: var(--text);
-    letter-spacing: 0.05em;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-  }
-  .chip-arrow { font-size: 10px; }
-  .chip-arrow.up { color: var(--accent); }
-  .chip-arrow.dn { color: var(--red); }
-  .chip-arrow.neu { color: var(--amber); }
-
-  /* EARNINGS TABLE */
-  .earnings-table { width: 100%; border-collapse: collapse; }
-  .earnings-table th {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--muted2);
-    padding: 8px 12px;
-    text-align: left;
-    border-bottom: 1px solid var(--border);
-    font-weight: 400;
-  }
-  .earnings-table td {
-    font-size: 12px;
-    padding: 10px 12px;
-    border-bottom: 1px solid var(--border);
-    vertical-align: middle;
-  }
-  .earnings-table tr:last-child td { border-bottom: none; }
-  .earnings-table tr:hover td { background: rgba(255,255,255,0.02); }
-  .e-ticker { font-family: var(--font-mono); font-size: 12px; font-weight: 500; color: var(--text); }
-  .e-name { font-size: 11px; color: var(--muted); }
-  .e-date { font-family: var(--font-mono); font-size: 11px; color: var(--muted); }
-  .e-exp { font-family: var(--font-mono); font-size: 11px; }
-  .e-relevance {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    padding: 2px 7px;
-    border-radius: 3px;
-    letter-spacing: 0.04em;
-  }
-  .rel-high { background: var(--accent-dim); color: var(--accent); }
-  .rel-med { background: var(--amber-dim); color: var(--amber); }
-  .rel-watch { background: var(--blue-dim); color: var(--blue); }
-
-  /* SIGNALS SIDEBAR */
-  .signal-item {
-    padding: 12px 0;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-  }
-  .signal-item:last-child { border-bottom: none; }
-  .signal-icon {
-    width: 32px;
-    height: 32px;
-    border-radius: var(--r);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-    flex-shrink: 0;
-  }
-  .si-green { background: rgba(200,240,106,0.1); }
-  .si-red { background: var(--red-dim); }
-  .si-amber { background: var(--amber-dim); }
-  .si-blue { background: var(--blue-dim); }
-  .signal-content { flex: 1; }
-  .signal-title { font-size: 12px; font-weight: 500; color: var(--text); margin-bottom: 2px; }
-  .signal-body { font-size: 11px; color: var(--muted); line-height: 1.4; }
-  .signal-time { font-family: var(--font-mono); font-size: 10px; color: var(--muted2); margin-top: 3px; }
-
-  /* SECTOR HEATMAP */
-  .heatmap-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 6px;
-  }
-  .heatmap-cell {
-    border-radius: 6px;
-    padding: 10px 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    cursor: default;
-    transition: filter 0.2s;
-  }
-  .heatmap-cell:hover { filter: brightness(1.15); }
-  .hm-name { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.05em; }
-  .hm-pct { font-family: var(--font-display); font-size: 16px; font-weight: 700; }
-  .hm-label { font-size: 9px; opacity: 0.7; }
-  .bg-strong-up { background: rgba(59,109,17,0.5); }
-  .bg-up { background: rgba(59,109,17,0.3); }
-  .bg-slight-up { background: rgba(59,109,17,0.15); }
-  .bg-flat { background: rgba(100,100,100,0.2); }
-  .bg-slight-dn { background: rgba(163,45,45,0.15); }
-  .bg-dn { background: rgba(163,45,45,0.3); }
-  .bg-strong-dn { background: rgba(163,45,45,0.5); }
-
-  /* CHART CONTAINERS */
-  .chart-wrap { position: relative; width: 100%; height: 200px; }
-  .chart-wrap-lg { position: relative; width: 100%; height: 260px; }
-
-  /* PROBABILITY BAR */
-  .prob-item { margin-bottom: 10px; }
-  .prob-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
-  .prob-name { font-size: 12px; color: var(--text); }
-  .prob-pct { font-family: var(--font-mono); font-size: 11px; color: var(--muted); }
-  .prob-track { height: 5px; background: var(--bg4); border-radius: 3px; overflow: hidden; }
-  .prob-fill { height: 100%; border-radius: 3px; transition: width 1s ease; }
-
-  /* REGIME INDICATOR */
-  .regime-box {
-    background: var(--bg3);
-    border: 1px solid var(--border);
-    border-radius: var(--r);
-    padding: 14px 16px;
-    margin-bottom: 10px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  .regime-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-  .regime-text { flex: 1; }
-  .regime-name { font-family: var(--font-display); font-size: 13px; font-weight: 600; color: var(--text); }
-  .regime-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
-  .regime-conf {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    color: var(--muted);
-  }
+  .card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;}
+  .card-header{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+  .card-title{font-family:var(--font-display);font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text);}
+  .card-tag{font-family:var(--font-mono);font-size:10px;padding:2px 8px;border-radius:4px;letter-spacing:0.05em;}
+  .tag-active{background:rgba(200,240,106,0.15);color:var(--accent);border:1px solid rgba(200,240,106,0.25);}
+  .tag-watch{background:var(--amber-dim);color:var(--amber);border:1px solid rgba(251,191,36,0.25);}
+  .tag-emerging{background:var(--blue-dim);color:var(--blue);border:1px solid rgba(96,165,250,0.25);}
+  .tag-risk{background:var(--red-dim);color:var(--red);border:1px solid rgba(248,113,113,0.25);}
+  .card-body{padding:16px 18px;}
 
   /* TABS */
-  .tab-bar { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 16px; }
-  .tab {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    padding: 10px 16px;
-    cursor: pointer;
-    color: var(--muted);
-    border-bottom: 2px solid transparent;
-    transition: all 0.2s;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-  }
-  .tab:hover { color: var(--text); }
-  .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .tab-bar{display:flex;border-bottom:1px solid var(--border);margin-bottom:16px;}
+  .tab{font-family:var(--font-mono);font-size:11px;padding:10px 16px;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;transition:all 0.2s;letter-spacing:0.06em;text-transform:uppercase;}
+  .tab:hover{color:var(--text);}
+  .tab.active{color:var(--accent);border-bottom-color:var(--accent);}
+  .tab-panel{display:none;}
+  .tab-panel.active{display:block;}
+  .fade-in{animation:fadeIn 0.4s ease forwards;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 
-  .tab-panel { display: none; }
-  .tab-panel.active { display: block; }
+  /* SIGNALS */
+  .signal-item{padding:12px 0;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:12px;}
+  .signal-item:last-child{border-bottom:none;}
+  .signal-icon{width:32px;height:32px;border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+  .si-green{background:rgba(200,240,106,0.1);}
+  .si-red{background:var(--red-dim);}
+  .si-amber{background:var(--amber-dim);}
+  .si-blue{background:var(--blue-dim);}
+  .signal-content{flex:1;}
+  .signal-title{font-size:12px;font-weight:500;color:var(--text);margin-bottom:2px;}
+  .signal-body{font-size:11px;color:var(--muted);line-height:1.4;}
+  .signal-time{font-family:var(--font-mono);font-size:10px;color:var(--muted2);margin-top:3px;}
+
+  /* HEATMAP */
+  .heatmap-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:24px;}
+  .heatmap-cell{border-radius:6px;padding:10px 12px;cursor:default;transition:filter 0.2s;}
+  .heatmap-cell:hover{filter:brightness(1.15);}
+  .hm-name{font-family:var(--font-mono);font-size:10px;letter-spacing:0.05em;}
+  .hm-pct{font-family:var(--font-display);font-size:16px;font-weight:700;}
+  .hm-label{font-size:9px;opacity:0.7;}
+  .bg-strong-up{background:rgba(59,109,17,0.5);}
+  .bg-up{background:rgba(59,109,17,0.3);}
+  .bg-slight-up{background:rgba(59,109,17,0.15);}
+  .bg-flat{background:rgba(100,100,100,0.2);}
+  .bg-slight-dn{background:rgba(163,45,45,0.15);}
+  .bg-dn{background:rgba(163,45,45,0.3);}
+  .bg-strong-dn{background:rgba(163,45,45,0.5);}
+
+  /* EARNINGS TABLE */
+  .earnings-table{width:100%;border-collapse:collapse;}
+  .earnings-table th{font-family:var(--font-mono);font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted2);padding:8px 12px;text-align:left;border-bottom:1px solid var(--border);font-weight:400;}
+  .earnings-table td{font-size:12px;padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:middle;}
+  .earnings-table tr:last-child td{border-bottom:none;}
+  .earnings-table tr:hover td{background:rgba(255,255,255,0.02);}
+  .e-ticker{font-family:var(--font-mono);font-size:12px;font-weight:500;color:var(--text);}
+  .e-name{font-size:11px;color:var(--muted);}
+  .e-date{font-family:var(--font-mono);font-size:11px;color:var(--muted);}
+  .e-relevance{font-family:var(--font-mono);font-size:10px;padding:2px 7px;border-radius:3px;letter-spacing:0.04em;}
+  .rel-high{background:var(--accent-dim);color:var(--accent);}
+  .rel-med{background:var(--amber-dim);color:var(--amber);}
+  .rel-watch{background:var(--blue-dim);color:var(--blue);}
+
+  /* PROB BARS */
+  .prob-item{margin-bottom:10px;}
+  .prob-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
+  .prob-name{font-size:12px;color:var(--text);}
+  .prob-pct{font-family:var(--font-mono);font-size:11px;color:var(--muted);}
+  .prob-track{height:5px;background:var(--bg4);border-radius:3px;overflow:hidden;}
+  .prob-fill{height:100%;border-radius:3px;}
+
+  /* CHART */
+  .chart-wrap{position:relative;width:100%;height:200px;}
+  .chart-wrap-lg{position:relative;width:100%;height:260px;}
+
+  /* REGIME */
+  .regime-box{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;margin-bottom:10px;display:flex;align-items:center;gap:12px;}
+  .regime-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+  .regime-text{flex:1;}
+  .regime-name{font-family:var(--font-display);font-size:13px;font-weight:600;color:var(--text);}
+  .regime-sub{font-size:11px;color:var(--muted);margin-top:2px;}
+  .regime-conf{font-family:var(--font-mono);font-size:11px;color:var(--muted);}
+
+  /* NOTE BAR */
+  .note-bar{background:var(--bg3);border:1px solid rgba(200,240,106,0.15);border-left:3px solid var(--accent);border-radius:0 var(--r) var(--r) 0;padding:10px 14px;margin-bottom:16px;font-size:12px;color:var(--muted);line-height:1.5;}
+
+  /* TICKER CHIPS */
+  .ticker-chip{font-family:var(--font-mono);font-size:10px;padding:3px 8px;background:var(--bg3);border:1px solid var(--border);border-radius:4px;color:var(--text);letter-spacing:0.05em;display:inline-flex;align-items:center;gap:5px;}
+  .chip-arrow.up{color:var(--accent);}
+  .chip-arrow.dn{color:var(--red);}
+  .chip-arrow.neu{color:var(--amber);}
+
+  /* ======== MOVERS ======== */
+  .mover-filter{font-family:var(--font-mono);font-size:11px;padding:5px 14px;border:1px solid var(--border2);border-radius:var(--r);background:transparent;color:var(--muted);cursor:pointer;transition:all 0.2s;letter-spacing:0.04em;}
+  .mover-filter:hover{color:var(--text);background:var(--bg3);}
+  .mover-filter.active{background:var(--bg3);color:var(--accent);border-color:rgba(200,240,106,0.3);}
+
+  .movers-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:8px;}
+
+  .mover-card{background:var(--bg2);border-radius:var(--r);overflow:hidden;border:1px solid var(--border);transition:border-color 0.2s,transform 0.2s;}
+  .mover-card:hover{transform:translateY(-2px);border-color:var(--border2);}
+  .mover-card.gain{border-top:2px solid rgba(200,240,106,0.5);}
+  .mover-card.lose{border-top:2px solid rgba(248,113,113,0.5);}
+
+  .mover-top{display:flex;justify-content:space-between;align-items:flex-start;padding:14px 16px 10px;border-bottom:1px solid var(--border);}
+  .mover-ticker{font-family:var(--font-display);font-size:18px;font-weight:800;color:var(--text);line-height:1;margin-bottom:3px;}
+  .mover-name{font-size:12px;color:var(--muted);margin-bottom:5px;}
+  .mover-sector-tag{font-family:var(--font-mono);font-size:10px;padding:2px 8px;border-radius:4px;display:inline-block;letter-spacing:0.04em;}
+  .mover-right{text-align:right;}
+  .mover-pct{font-family:var(--font-display);font-size:24px;font-weight:800;line-height:1;}
+  .gain-text{color:var(--accent);}
+  .lose-text{color:var(--red);}
+  .mover-price{font-family:var(--font-mono);font-size:12px;color:var(--muted);margin-top:3px;}
+  .mover-vol{font-family:var(--font-mono);font-size:10px;color:var(--muted2);margin-top:2px;}
+
+  .mover-why{padding:12px 16px;border-bottom:1px solid var(--border);}
+  .why-label{font-family:var(--font-mono);font-size:9px;letter-spacing:0.1em;color:var(--muted2);text-transform:uppercase;margin-bottom:5px;}
+  .why-text{font-size:12px;color:var(--muted);line-height:1.6;}
+
+  .mover-play{padding:12px 16px;background:rgba(255,255,255,0.015);}
+  .play-label{font-family:var(--font-mono);font-size:9px;letter-spacing:0.1em;color:var(--amber);text-transform:uppercase;margin-bottom:5px;}
+  .play-text{font-size:12px;color:var(--muted);line-height:1.6;}
+  .play-tag{font-family:var(--font-mono);font-size:10px;padding:2px 8px;border-radius:4px;display:inline-block;margin-top:6px;letter-spacing:0.04em;font-weight:500;}
+  .play-tag.buy{background:rgba(200,240,106,0.15);color:var(--accent);border:1px solid rgba(200,240,106,0.25);}
+  .play-tag.watch{background:var(--amber-dim);color:var(--amber);border:1px solid rgba(251,191,36,0.25);}
+  .play-tag.avoid{background:var(--red-dim);color:var(--red);border:1px solid rgba(248,113,113,0.25);}
+
+  /* LOADING STATES */
+  .skeleton{background:linear-gradient(90deg,var(--bg3) 25%,var(--bg4) 50%,var(--bg3) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:4px;}
+  @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+  .loading-text{font-family:var(--font-mono);font-size:11px;color:var(--muted2);text-align:center;padding:40px;letter-spacing:0.05em;}
+  .error-text{font-family:var(--font-mono);font-size:11px;color:var(--red);text-align:center;padding:20px;}
+
+  /* LAST UPDATED */
+  .last-updated{font-family:var(--font-mono);font-size:10px;color:var(--muted2);text-align:right;margin-bottom:8px;}
+
+  /* NEWS */
+  .news-item{padding:12px 0;border-bottom:1px solid var(--border);display:flex;gap:12px;}
+  .news-item:last-child{border-bottom:none;}
+  .news-meta{flex-shrink:0;width:80px;}
+  .news-ticker-badge{font-family:var(--font-mono);font-size:10px;padding:2px 6px;border-radius:3px;background:var(--bg3);border:1px solid var(--border2);color:var(--text);margin-bottom:4px;display:inline-block;}
+  .news-time{font-family:var(--font-mono);font-size:10px;color:var(--muted2);}
+  .news-headline{font-size:12px;color:var(--text);line-height:1.5;margin-bottom:3px;}
+  .news-source{font-size:11px;color:var(--muted2);}
+
+  /* BLINK */
+  .blink{animation:blink 1.5s step-end infinite;}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
 
   /* FOOTER */
-  .footer {
-    margin-top: 40px;
-    padding: 20px 24px;
-    border-top: 1px solid var(--border);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .footer-left { font-family: var(--font-mono); font-size: 10px; color: var(--muted2); }
-  .footer-right { font-family: var(--font-mono); font-size: 10px; color: var(--muted2); }
-
-  /* ANIMATIONS */
-  .fade-in { animation: fadeIn 0.5s ease forwards; }
-  @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
-
-  .blink { animation: blink 1.5s step-end infinite; }
-  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+  .footer{margin-top:40px;padding:20px 24px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+  .footer-left{font-family:var(--font-mono);font-size:10px;color:var(--muted2);}
+  .footer-right{font-family:var(--font-mono);font-size:10px;color:var(--muted2);}
 
   /* SCROLLBAR */
-  ::-webkit-scrollbar { width: 6px; height: 6px; }
-  ::-webkit-scrollbar-track { background: var(--bg); }
-  ::-webkit-scrollbar-thumb { background: var(--bg4); border-radius: 3px; }
-  ::-webkit-scrollbar-thumb:hover { background: var(--muted2); }
+  ::-webkit-scrollbar{width:6px;height:6px;}
+  ::-webkit-scrollbar-track{background:var(--bg);}
+  ::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:3px;}
 
   /* RESPONSIVE */
-  @media (max-width: 1100px) {
-    .metrics-row { grid-template-columns: repeat(3, 1fr); }
-    .grid-2, .grid-left-wide { grid-template-columns: 1fr; }
-    .heatmap-grid { grid-template-columns: repeat(2, 1fr); }
-  }
-  @media (max-width: 700px) {
-    .metrics-row { grid-template-columns: repeat(2, 1fr); }
-    .grid-3 { grid-template-columns: 1fr; }
-    .header-nav { display: none; }
-  }
-
-  .mini-sparkline { display: inline-block; vertical-align: middle; }
-  .note-bar {
-    background: var(--bg3);
-    border: 1px solid rgba(200,240,106,0.15);
-    border-left: 3px solid var(--accent);
-    border-radius: 0 var(--r) var(--r) 0;
-    padding: 10px 14px;
-    margin-bottom: 12px;
-    font-size: 12px;
-    color: var(--muted);
-    line-height: 1.5;
-  }
+  @media(max-width:1100px){.metrics-row{grid-template-columns:repeat(3,1fr);}.grid-left-wide{grid-template-columns:1fr;}.heatmap-grid{grid-template-columns:repeat(2,1fr);}}
+  @media(max-width:900px){.movers-grid{grid-template-columns:1fr;}.grid-2,.grid-3{grid-template-columns:1fr;}}
+  @media(max-width:700px){.metrics-row{grid-template-columns:repeat(2,1fr);}.header-nav{display:none;}}
 </style>
 </head>
 <body>
 
 <!-- HEADER -->
 <header class="header">
-  <div class="logo">
-    <div class="logo-dot"></div>
-    SIGNAL
-  </div>
+  <div class="logo"><div class="logo-dot"></div>SIGNAL</div>
   <div class="header-meta">
     <span class="live-badge">● LIVE</span>
-    <span class="header-date" id="live-clock">APR 09, 2026 — 00:00:00 ET</span>
+    <span id="market-status-badge" class="market-status status-closed">MARKET CLOSED</span>
+    <span class="refresh-badge" onclick="refreshAll()">↻ REFRESH NOW</span>
+    <span class="header-date" id="live-clock">--:--:-- ET</span>
     <nav class="header-nav">
-      <button class="nav-btn active" onclick="showTab('overview')">Overview</button>
-      <button class="nav-btn" onclick="showTab('trends')">Trends</button>
-      <button class="nav-btn" onclick="showTab('earnings')">Earnings</button>
-      <button class="nav-btn" onclick="showTab('sectors')">Sectors</button>
+      <button class="nav-btn active" onclick="showTab('overview',this)">Overview</button>
+      <button class="nav-btn" onclick="showTab('movers',this)">⚡ Movers</button>
+      <button class="nav-btn" onclick="showTab('trends',this)">Trends</button>
+      <button class="nav-btn" onclick="showTab('earnings',this)">Earnings</button>
+      <button class="nav-btn" onclick="showTab('news',this)">News</button>
     </nav>
   </div>
 </header>
 
 <!-- TICKER TAPE -->
 <div class="ticker-tape">
-  <div class="tape-inner" id="tape">
-    <!-- populated by JS -->
+  <div class="tape-track" id="tape-track">
+    <div class="tape-item"><span class="tape-sym">LOADING</span><span class="tape-price">—</span><span class="tape-chg">—</span></div>
   </div>
 </div>
 
 <main class="main">
 
-  <!-- =============== OVERVIEW TAB =============== -->
-  <div id="tab-overview" class="tab-panel active fade-in">
+<!-- ===== OVERVIEW TAB ===== -->
+<div id="tab-overview" class="tab-panel active fade-in">
 
-    <!-- TOP METRICS -->
-    <div class="metrics-row">
-      <div class="metric-card">
-        <div class="metric-label">Fed Funds Rate</div>
-        <div class="metric-value">3.625%</div>
-        <div class="metric-chg neu">● ON HOLD</div>
-        <div class="metric-sub" style="margin-top:4px">3.5–3.75% range · paused</div>
-        <div class="metric-accent-bar" style="background: linear-gradient(90deg, var(--amber), transparent)"></div>
-      </div>
-      <div class="metric-card">
-        <div class="metric-label">Brent Crude (BZ=F)</div>
-        <div class="metric-value">$92.40</div>
-        <div class="metric-chg dn">▼ -8.2% ceasefire</div>
-        <div class="metric-sub" style="margin-top:4px">Peak: $120 · Iran conflict</div>
-        <div class="metric-accent-bar" style="background: linear-gradient(90deg, var(--red), transparent)"></div>
-      </div>
-      <div class="metric-card">
-        <div class="metric-label">Gold (GC=F)</div>
-        <div class="metric-value">$5,380</div>
-        <div class="metric-chg dn">▼ -0.8% off highs</div>
-        <div class="metric-sub" style="margin-top:4px">Safe-haven bid remains</div>
-        <div class="metric-accent-bar" style="background: linear-gradient(90deg, var(--amber), transparent)"></div>
-      </div>
-      <div class="metric-card">
-        <div class="metric-label">S&P 500</div>
-        <div class="metric-value">5,641</div>
-        <div class="metric-chg up">▲ +0.6% ceasefire rally</div>
-        <div class="metric-sub" style="margin-top:4px">Off 10% warflation low</div>
-        <div class="metric-accent-bar" style="background: linear-gradient(90deg, var(--accent), transparent)"></div>
-      </div>
-      <div class="metric-card">
-        <div class="metric-label">10Y Treasury</div>
-        <div class="metric-value">4.52%</div>
-        <div class="metric-chg dn">▼ -4bp today</div>
-        <div class="metric-sub" style="margin-top:4px">Curve steepening</div>
-        <div class="metric-accent-bar" style="background: linear-gradient(90deg, var(--blue), transparent)"></div>
-      </div>
-      <div class="metric-card">
-        <div class="metric-label">VIX</div>
-        <div class="metric-value">22.4</div>
-        <div class="metric-chg dn">▼ -3.1 on accord news</div>
-        <div class="metric-sub" style="margin-top:4px">Peaked at 38 in March</div>
-        <div class="metric-accent-bar" style="background: linear-gradient(90deg, var(--teal), transparent)"></div>
-      </div>
-    </div>
-
-    <!-- MAIN CONTENT -->
-    <div class="grid-left-wide">
-      <!-- LEFT: Macro Regime + Sector Performance Chart -->
-      <div>
-        <!-- Regime Indicator -->
-        <div class="section-header">
-          <span class="section-title">Macro <span class="section-accent">Regime</span></span>
-          <div class="section-line"></div>
-        </div>
-
-        <div class="regime-box" style="border-color: rgba(251,191,36,0.3);">
-          <div class="regime-dot" style="background: var(--amber); box-shadow: 0 0 8px var(--amber);"></div>
-          <div class="regime-text">
-            <div class="regime-name">Late-Cycle Non-Recessionary + Geopolitical Shock</div>
-            <div class="regime-sub">Fed pause · shallow cut cycle · energy supply disruption · ceasefire emerging</div>
-          </div>
-          <div class="regime-conf">74% conf.</div>
-        </div>
-        <div class="regime-box" style="border-color: rgba(200,240,106,0.2);">
-          <div class="regime-dot" style="background: var(--accent); box-shadow: 0 0 8px var(--accent);"></div>
-          <div class="regime-text">
-            <div class="regime-name">Peace Dividend Rotation In Progress</div>
-            <div class="regime-sub">Islamabad Accord · 45-day ceasefire · defense fading · airlines rebounding</div>
-          </div>
-          <div class="regime-conf">61% conf.</div>
-        </div>
-
-        <!-- Sector Performance Chart -->
-        <div class="section-header" style="margin-top: 20px;">
-          <span class="section-title">Regime <span class="section-accent">Sector Performance</span></span>
-          <div class="section-line"></div>
-          <span style="font-family: var(--font-mono); font-size: 10px; color: var(--muted)">avg % return by trigger</span>
-        </div>
-
-        <div class="chart-wrap-lg">
-          <canvas id="sectorChart" role="img" aria-label="Sector performance across macro regimes"></canvas>
-        </div>
-
-        <div style="display:flex;gap:16px;margin-top:10px;flex-wrap:wrap;">
-          <span style="display:flex;align-items:center;gap:5px;font-family:var(--font-mono);font-size:10px;color:var(--muted)"><span style="width:10px;height:10px;border-radius:2px;background:#c8f06a;display:inline-block;"></span>Fed Pause</span>
-          <span style="display:flex;align-items:center;gap:5px;font-family:var(--font-mono);font-size:10px;color:var(--muted)"><span style="width:10px;height:10px;border-radius:2px;background:#f87171;display:inline-block;"></span>Oil Shock (active)</span>
-          <span style="display:flex;align-items:center;gap:5px;font-family:var(--font-mono);font-size:10px;color:var(--muted)"><span style="width:10px;height:10px;border-radius:2px;background:#60a5fa;display:inline-block;"></span>Ceasefire Resolution</span>
-        </div>
-      </div>
-
-      <!-- RIGHT: Live Signals + Key Events -->
-      <div>
-        <div class="section-header">
-          <span class="section-title">Live <span class="section-accent">Signals</span></span>
-          <div class="section-line"></div>
-          <span class="blink" style="font-size:8px;color:var(--accent)">●</span>
-        </div>
-
-        <div class="card">
-          <div class="card-body" style="padding: 4px 16px;">
-            <div class="signal-item">
-              <div class="signal-icon si-green">📈</div>
-              <div class="signal-content">
-                <div class="signal-title">Airlines Rebounding on Ceasefire</div>
-                <div class="signal-body">DAL +4.2%, UAL +3.8% on Islamabad Accord progress. Fuel costs easing as Brent retreats.</div>
-                <div class="signal-time">APR 09 · CEASEFIRE PLAY</div>
-              </div>
-            </div>
-            <div class="signal-item">
-              <div class="signal-icon si-red">📉</div>
-              <div class="signal-content">
-                <div class="signal-title">Defense Premium Evaporating</div>
-                <div class="signal-body">LMT, RTX, NOC seeing "peace dividend" selloff. War-risk premium priced out. Long-term backlogs intact.</div>
-                <div class="signal-time">APR 09 · FADE DEFENSE WAR TRADE</div>
-              </div>
-            </div>
-            <div class="signal-item">
-              <div class="signal-icon si-amber">⚡</div>
-              <div class="signal-content">
-                <div class="signal-title">RTX Earnings Apr 21 — Catalyst</div>
-                <div class="signal-body">First major defense prime to report. Will reveal how quickly war contracts convert to revenue. Key Q1 '26 read.</div>
-                <div class="signal-time">APR 21 · HIGH IMPACT EARNINGS</div>
-              </div>
-            </div>
-            <div class="signal-item">
-              <div class="signal-icon si-green">💎</div>
-              <div class="signal-content">
-                <div class="signal-title">Gold Holding $5,300+ Floor</div>
-                <div class="signal-body">Safe-haven demand persists despite ceasefire. Fed uncertainty + 2026 midterm risk keeping premium alive.</div>
-                <div class="signal-time">APR 09 · MACRO HEDGE</div>
-              </div>
-            </div>
-            <div class="signal-item">
-              <div class="signal-icon si-blue">🤖</div>
-              <div class="signal-content">
-                <div class="signal-title">AI Capex Reaffirmed — Mag 7 Bounce</div>
-                <div class="signal-body">Big tech confirmed AI spending commitments despite warflation. NVDA, AVGO leading recovery from March lows.</div>
-                <div class="signal-time">APR 08 · STRUCTURAL TREND</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- HEATMAP ROW -->
-    <div class="section-header">
-      <span class="section-title">Sector <span class="section-accent">Heatmap</span></span>
-      <div class="section-line"></div>
-      <span style="font-family:var(--font-mono);font-size:10px;color:var(--muted)">1-month rolling performance</span>
-    </div>
-    <div class="heatmap-grid" style="margin-bottom:24px;">
-      <div class="heatmap-cell bg-strong-up">
-        <div class="hm-name up">DEFENSE</div>
-        <div class="hm-pct up">+18.4%</div>
-        <div class="hm-label up">war premium (now fading)</div>
-      </div>
-      <div class="heatmap-cell bg-strong-up">
-        <div class="hm-name up">ENERGY (US)</div>
-        <div class="hm-pct up">+14.2%</div>
-        <div class="hm-label up">Iran shock · WTI insulated</div>
-      </div>
-      <div class="heatmap-cell bg-up">
-        <div class="hm-name up">MATERIALS</div>
-        <div class="hm-pct up">+9.1%</div>
-        <div class="hm-label up">commodity tailwind</div>
-      </div>
-      <div class="heatmap-cell bg-up">
-        <div class="hm-name up">FINANCIALS</div>
-        <div class="hm-pct up">+6.3%</div>
-        <div class="hm-label up">volatility revenue</div>
-      </div>
-      <div class="heatmap-cell bg-slight-up">
-        <div class="hm-name up">TECH / AI</div>
-        <div class="hm-pct up">+3.8%</div>
-        <div class="hm-label up">capex reaffirmed</div>
-      </div>
-      <div class="heatmap-cell bg-flat">
-        <div class="hm-name" style="color:var(--muted)">HEALTHCARE</div>
-        <div class="hm-pct" style="color:var(--muted)">+0.4%</div>
-        <div class="hm-label" style="color:var(--muted)">defensive, range-bound</div>
-      </div>
-      <div class="heatmap-cell bg-strong-dn">
-        <div class="hm-name dn">AIRLINES</div>
-        <div class="hm-pct dn">-18.6%</div>
-        <div class="hm-label dn">fuel shock · rebounding now</div>
-      </div>
-      <div class="heatmap-cell bg-dn">
-        <div class="hm-name dn">REAL ESTATE</div>
-        <div class="hm-pct dn">-7.2%</div>
-        <div class="hm-label dn">rate cut pause headwind</div>
-      </div>
-    </div>
-
-    <!-- UPCOMING EARNINGS PREVIEW -->
-    <div class="section-header">
-      <span class="section-title">Upcoming <span class="section-accent">Catalyst Events</span></span>
-      <div class="section-line"></div>
-    </div>
-    <div class="card" style="margin-bottom:24px;">
-      <div class="card-body" style="padding:0;">
-        <table class="earnings-table">
-          <thead>
-            <tr>
-              <th>Ticker</th>
-              <th>Company</th>
-              <th>Date</th>
-              <th>EPS Est.</th>
-              <th>Key Macro Theme</th>
-              <th>Relevance</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><div class="e-ticker">RTX</div></td>
-              <td><div class="e-name">RTX Corporation</div></td>
-              <td><div class="e-date">APR 21</div></td>
-              <td><div class="e-exp up">$1.48</div></td>
-              <td><div style="font-size:11px;color:var(--muted)">Defense supercycle · war contract conversion</div></td>
-              <td><span class="e-relevance rel-high">HIGH</span></td>
-            </tr>
-            <tr>
-              <td><div class="e-ticker">LMT</div></td>
-              <td><div class="e-name">Lockheed Martin</div></td>
-              <td><div class="e-date">APR 22</div></td>
-              <td><div class="e-exp up">$6.34</div></td>
-              <td><div style="font-size:11px;color:var(--muted)">F-35 doubling · Golden Dome $25B allocation</div></td>
-              <td><span class="e-relevance rel-high">HIGH</span></td>
-            </tr>
-            <tr>
-              <td><div class="e-ticker">XOM</div></td>
-              <td><div class="e-name">ExxonMobil</div></td>
-              <td><div class="e-date">APR 25</div></td>
-              <td><div class="e-exp up">$2.18</div></td>
-              <td><div style="font-size:11px;color:var(--muted)">US E&P · WTI margin vs. Brent spike</div></td>
-              <td><span class="e-relevance rel-high">HIGH</span></td>
-            </tr>
-            <tr>
-              <td><div class="e-ticker">CVX</div></td>
-              <td><div class="e-name">Chevron</div></td>
-              <td><div class="e-date">APR 25</div></td>
-              <td><div class="e-exp up">$2.84</div></td>
-              <td><div style="font-size:11px;color:var(--muted)">Oil shock beneficiary · domestic production</div></td>
-              <td><span class="e-relevance rel-high">HIGH</span></td>
-            </tr>
-            <tr>
-              <td><div class="e-ticker">MSFT</div></td>
-              <td><div class="e-name">Microsoft</div></td>
-              <td><div class="e-date">APR 28</div></td>
-              <td><div class="e-exp up">$3.22</div></td>
-              <td><div style="font-size:11px;color:var(--muted)">AI capex spend · Azure cloud growth</div></td>
-              <td><span class="e-relevance rel-high">HIGH</span></td>
-            </tr>
-            <tr>
-              <td><div class="e-ticker">NVDA</div></td>
-              <td><div class="e-name">NVIDIA</div></td>
-              <td><div class="e-date">MAY 14</div></td>
-              <td><div class="e-exp up">$0.89</div></td>
-              <td><div style="font-size:11px;color:var(--muted)">AI semiconductor · data center demand</div></td>
-              <td><span class="e-relevance rel-high">HIGH</span></td>
-            </tr>
-            <tr>
-              <td><div class="e-ticker">DAL</div></td>
-              <td><div class="e-name">Delta Air Lines</div></td>
-              <td><div class="e-date">APR 10</div></td>
-              <td><div class="e-exp dn">$0.39</div></td>
-              <td><div style="font-size:11px;color:var(--muted)">Fuel cost impact · ceasefire rebound play</div></td>
-              <td><span class="e-relevance rel-med">WATCH</span></td>
-            </tr>
-            <tr>
-              <td><div class="e-ticker">GD</div></td>
-              <td><div class="e-name">General Dynamics</div></td>
-              <td><div class="e-date">APR 23</div></td>
-              <td><div class="e-exp up">$3.78</div></td>
-              <td><div style="font-size:11px;color:var(--muted)">Submarine ramp · $118B backlog quality</div></td>
-              <td><span class="e-relevance rel-med">WATCH</span></td>
-            </tr>
-            <tr>
-              <td><div class="e-ticker">MOS</div></td>
-              <td><div class="e-name">Mosaic Company</div></td>
-              <td><div class="e-date">MAY 06</div></td>
-              <td><div class="e-exp up">$0.62</div></td>
-              <td><div style="font-size:11px;color:var(--muted)">Gulf fertilizer disruption · ammonia supply shock</div></td>
-              <td><span class="e-relevance rel-watch">EMERGING</span></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
+  <div class="metrics-row" id="metrics-row">
+    <div class="metric-card"><div class="metric-label">S&P 500</div><div class="metric-value" id="m-spy">—</div><div class="metric-chg" id="m-spy-chg">—</div><div class="metric-accent-bar" style="background:linear-gradient(90deg,var(--accent),transparent)"></div></div>
+    <div class="metric-card"><div class="metric-label">NASDAQ</div><div class="metric-value" id="m-qqq">—</div><div class="metric-chg" id="m-qqq-chg">—</div><div class="metric-accent-bar" style="background:linear-gradient(90deg,var(--blue),transparent)"></div></div>
+    <div class="metric-card"><div class="metric-label">DOW JONES</div><div class="metric-value" id="m-dia">—</div><div class="metric-chg" id="m-dia-chg">—</div><div class="metric-accent-bar" style="background:linear-gradient(90deg,var(--teal),transparent)"></div></div>
+    <div class="metric-card"><div class="metric-label">VIX</div><div class="metric-value" id="m-vix">—</div><div class="metric-chg" id="m-vix-chg">—</div><div class="metric-accent-bar" style="background:linear-gradient(90deg,var(--amber),transparent)"></div></div>
+    <div class="metric-card"><div class="metric-label">Gold (GLD)</div><div class="metric-value" id="m-gld">—</div><div class="metric-chg" id="m-gld-chg">—</div><div class="metric-accent-bar" style="background:linear-gradient(90deg,var(--amber),transparent)"></div></div>
+    <div class="metric-card"><div class="metric-label">Oil (USO)</div><div class="metric-value" id="m-uso">—</div><div class="metric-chg" id="m-uso-chg">—</div><div class="metric-accent-bar" style="background:linear-gradient(90deg,var(--red),transparent)"></div></div>
   </div>
 
-  <!-- =============== TRENDS TAB =============== -->
-  <div id="tab-trends" class="tab-panel fade-in">
-
-    <div class="note-bar">
-      <strong style="color:var(--text)">Analyst note:</strong> Five macro triggers are active simultaneously. Defense/oil shock trades are in "peace dividend" reversal mode (Apr 9). Airlines and international equities are the highest-beta beneficiaries of ceasefire. AI infrastructure remains the most durable structural trade.
-    </div>
-
-    <!-- Trend 1 -->
-    <div class="section-header">
-      <span class="section-title">Trigger 1 — <span class="section-accent">Fed Rate Pause</span></span>
-      <div class="section-line"></div>
-      <span class="card-tag tag-active">ACTIVE</span>
-    </div>
-    <div class="trend-card">
-      <div class="trend-header">
-        <div class="trend-left">
-          <div class="trend-name">Shallow cut cycle plateau · 3.5–3.75% · one cut expected H2 2026</div>
-          <div class="trend-desc">Historical win-rate: quality + large-cap growth outperforms in 78% of non-recessionary pauses. REITs and rate-sensitive underperform until next cut. Financials benefit from slower NIM compression + volatility-driven trading revenue.</div>
-        </div>
-        <div class="trend-signal">
-          <div class="signal-value up">78%</div>
-          <div class="signal-label">Tech win rate</div>
-        </div>
+  <div class="grid-left-wide">
+    <div>
+      <div class="section-header">
+        <span class="section-title">Macro <span class="section-accent">Regime</span></span>
+        <div class="section-line"></div>
       </div>
-      <div class="trend-tickers">
-        <span class="ticker-chip"><span class="chip-arrow up">▲</span>MSFT</span>
-        <span class="ticker-chip"><span class="chip-arrow up">▲</span>AAPL</span>
-        <span class="ticker-chip"><span class="chip-arrow up">▲</span>NVDA</span>
-        <span class="ticker-chip"><span class="chip-arrow up">▲</span>JPM</span>
-        <span class="ticker-chip"><span class="chip-arrow up">▲</span>GS</span>
-        <span class="ticker-chip"><span class="chip-arrow up">▲</span>BAC</span>
-        <span class="ticker-chip"><span class="chip-arrow dn">▼</span>VNQ</span>
-        <span class="ticker-chip"><span class="chip-arrow dn">▼</span>ARE</span>
-        <span class="ticker-chip"><span class="chip-arrow dn">▼</span>AMT</span>
+      <div class="regime-box" style="border-color:rgba(251,191,36,0.3);">
+        <div class="regime-dot" style="background:var(--amber);box-shadow:0 0 8px var(--amber);"></div>
+        <div class="regime-text">
+          <div class="regime-name">Late-Cycle Non-Recessionary + Geopolitical Shock</div>
+          <div class="regime-sub">Fed pause 3.5–3.75% · Iran conflict energy shock · ceasefire negotiations ongoing</div>
+        </div>
+        <div class="regime-conf">74% conf.</div>
+      </div>
+      <div class="regime-box" style="border-color:rgba(200,240,106,0.2);">
+        <div class="regime-dot" style="background:var(--accent);box-shadow:0 0 8px var(--accent);"></div>
+        <div class="regime-text">
+          <div class="regime-name">Peace Dividend Rotation In Progress</div>
+          <div class="regime-sub">Defense fading · airlines rebounding · international equities recovering</div>
+        </div>
+        <div class="regime-conf">61% conf.</div>
+      </div>
+
+      <div class="section-header" style="margin-top:20px;">
+        <span class="section-title">Sector <span class="section-accent">Performance</span></span>
+        <div class="section-line"></div>
+      </div>
+      <div class="chart-wrap-lg"><canvas id="sectorChart" role="img" aria-label="Sector performance by macro regime"></canvas></div>
+      <div style="display:flex;gap:16px;margin-top:10px;flex-wrap:wrap;">
+        <span style="display:flex;align-items:center;gap:5px;font-family:var(--font-mono);font-size:10px;color:var(--muted)"><span style="width:10px;height:10px;border-radius:2px;background:#c8f06a;display:inline-block;"></span>Fed Pause</span>
+        <span style="display:flex;align-items:center;gap:5px;font-family:var(--font-mono);font-size:10px;color:var(--muted)"><span style="width:10px;height:10px;border-radius:2px;background:#f87171;display:inline-block;"></span>Oil Shock</span>
+        <span style="display:flex;align-items:center;gap:5px;font-family:var(--font-mono);font-size:10px;color:var(--muted)"><span style="width:10px;height:10px;border-radius:2px;background:#60a5fa;display:inline-block;"></span>Ceasefire</span>
       </div>
     </div>
 
-    <!-- Trend 2 -->
-    <div class="section-header" style="margin-top:8px;">
-      <span class="section-title">Trigger 2 — <span class="section-accent">Middle East Oil Shock</span></span>
-      <div class="section-line"></div>
-      <span class="card-tag tag-watch">RESOLVING</span>
-    </div>
-    <div class="trend-card">
-      <div class="trend-header">
-        <div class="trend-left">
-          <div class="trend-name">Iran conflict → Brent peaked $120 → retreating on ceasefire ($92). Hormuz reopening.</div>
-          <div class="trend-desc">US domestic E&P (WTI-exposed) benefited most — structurally insulated from Hormuz. Brent-exposed international majors now face reversal. Airlines were the hardest hit; they are now the highest-beta ceasefire rebound. Historical analog: Gulf War I shock → resolution → S&P +30% in 6 months.</div>
-        </div>
-        <div class="trend-signal">
-          <div class="signal-value neu">-23%</div>
-          <div class="signal-label">Brent off peak</div>
-        </div>
-      </div>
-      <div class="trend-tickers">
-        <span class="ticker-chip"><span class="chip-arrow up">▲</span>XOM</span>
-        <span class="ticker-chip"><span class="chip-arrow up">▲</span>CVX</span>
-        <span class="ticker-chip"><span class="chip-arrow up">▲</span>COP</span>
-        <span class="ticker-chip"><span class="chip-arrow up">▲</span>GLD</span>
-        <span class="ticker-chip"><span class="chip-arrow up">▲</span>MOS</span>
-        <span class="ticker-chip"><span class="chip-arrow neu">◆</span>BP</span>
-        <span class="ticker-chip"><span class="chip-arrow neu">◆</span>SHEL</span>
-        <span class="ticker-chip"><span class="chip-arrow dn">▼</span>DAL (now rebounding)</span>
-        <span class="ticker-chip"><span class="chip-arrow dn">▼</span>UAL (now rebounding)</span>
-      </div>
-    </div>
-
-    <!-- Trend 3 -->
-    <div class="section-header" style="margin-top:8px;">
-      <span class="section-title">Trigger 3 — <span class="section-accent">Defense Supercycle</span></span>
-      <div class="section-line"></div>
-      <span class="card-tag tag-watch">FADE WAR TRADE</span>
-    </div>
-    <div class="trend-card">
-      <div class="trend-header">
-        <div class="trend-left">
-          <div class="trend-name">$1.5T FY2027 budget · Global defense $2.6T (+8.1% YoY) · NATO 2% floors</div>
-          <div class="trend-desc">Defense surged to ATH in March on conflict + budget news, now fading on ceasefire talks ("sell the news"). WSJ noted stocks were flat-to-down despite active war — war-risk premium not a reliable driver. Durable play: multi-year backlogs, not conflict speculation. RTX Q1 earnings (Apr 21) = first direct revenue test.</div>
-        </div>
-        <div class="trend-signal">
-          <div class="signal-value dn">-12%</div>
-          <div class="signal-label">Off March ATH</div>
-        </div>
-      </div>
-      <div class="trend-tickers">
-        <span class="ticker-chip"><span class="chip-arrow up">▲</span>RTX (backlog $268B)</span>
-        <span class="ticker-chip"><span class="chip-arrow up">▲</span>GD (submarine ramp)</span>
-        <span class="ticker-chip"><span class="chip-arrow neu">◆</span>LMT (F-35 risk)</span>
-        <span class="ticker-chip"><span class="chip-arrow neu">◆</span>NOC (B-21 +6%)</span>
-        <span class="ticker-chip"><span class="chip-arrow up">▲</span>ITA (ETF)</span>
-      </div>
-    </div>
-
-    <!-- Trend 4 -->
-    <div class="section-header" style="margin-top:8px;">
-      <span class="section-title">Trigger 4 — <span class="section-accent">AI Infrastructure Buildout</span></span>
-      <div class="section-line"></div>
-      <span class="card-tag tag-active">STRUCTURAL</span>
-    </div>
-    <div class="trend-card">
-      <div class="trend-header">
-        <div class="trend-left">
-          <div class="trend-name">Big tech reaffirms AI capex · Mag 7 recovering · Power/nuclear contracts structural</div>
-          <div class="trend-desc">Most durable theme — not cyclical. Hyperscaler capex locked in via long-term contracts. VST +304% in 2024 (AI power play). NVDA +173% in 2024. Tech/comms top 2 sectors 2023–2025. Despite warflation pressure on growth stocks, AI capex reaffirmed in Q1 '26 earnings calls.</div>
-        </div>
-        <div class="trend-signal">
-          <div class="signal-value up">+173%</div>
-          <div class="signal-label">NVDA 2024</div>
-        </div>
-      </div>
-      <div class="trend-tickers">
-        <span class="ticker-chip"><span class="chip-arrow up">▲</span>NVDA</span>
-        <span class="ticker-chip"><span class="chip-arrow up">▲</span>AVGO</span>
-        <span class="ticker-chip"><span class="chip-arrow up">▲</span>MSFT</span>
-        <span class="ticker-chip"><span class="chip-arrow up">▲</span>GOOGL</span>
-        <span class="ticker-chip"><span class="chip-arrow up">▲</span>META</span>
-        <span class="ticker-chip"><span class="chip-arrow up">▲</span>VST (power)</span>
-        <span class="ticker-chip"><span class="chip-arrow up">▲</span>CEG (nuclear)</span>
-        <span class="ticker-chip"><span class="chip-arrow up">▲</span>NEE</span>
-      </div>
-    </div>
-
-    <!-- Trend 5 -->
-    <div class="section-header" style="margin-top:8px;">
-      <span class="section-title">Trigger 5 — <span class="section-accent">Ceasefire Resolution Rotation</span></span>
-      <div class="section-line"></div>
-      <span class="card-tag tag-emerging">EMERGING</span>
-    </div>
-    <div class="trend-card">
-      <div class="trend-header">
-        <div class="trend-left">
-          <div class="trend-name">Islamabad Accord · 45-day ceasefire · Islamabad peace talks ongoing (Apr 9)</div>
-          <div class="trend-desc">Classic "resolution trade" — shock-losers rebound fastest. Airlines, consumer discretionary, international equities (Europe/Asia hit hardest by energy shock) lead the recovery. Caution: ceasefire not final. Trump's 50% tariff threat on nations supplying Iran creates new uncertainty layer.</div>
-        </div>
-        <div class="trend-signal">
-          <div class="signal-value up">+30%</div>
-          <div class="signal-label">Gulf War I analog</div>
-        </div>
-      </div>
-      <div class="trend-tickers">
-        <span class="ticker-chip"><span class="chip-arrow up">▲</span>DAL (+4.2%)</span>
-        <span class="ticker-chip"><span class="chip-arrow up">▲</span>UAL (+3.8%)</span>
-        <span class="ticker-chip"><span class="chip-arrow up">▲</span>JBLU</span>
-        <span class="ticker-chip"><span class="chip-arrow up">▲</span>EWG (Europe)</span>
-        <span class="ticker-chip"><span class="chip-arrow up">▲</span>EWJ (Japan)</span>
-        <span class="ticker-chip"><span class="chip-arrow up">▲</span>VGK</span>
-        <span class="ticker-chip"><span class="chip-arrow dn">▼</span>LMT (fade)</span>
-        <span class="ticker-chip"><span class="chip-arrow dn">▼</span>RTX (fade)</span>
-        <span class="ticker-chip"><span class="chip-arrow dn">▼</span>XOM (partial)</span>
-      </div>
-    </div>
-
-    <!-- Historical probabilities -->
-    <div class="section-header" style="margin-top: 16px;">
-      <span class="section-title">Historical <span class="section-accent">Event Win Rates</span></span>
-      <div class="section-line"></div>
-    </div>
-    <div class="grid-2">
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">Non-recessionary rate pause — sector outperformance</div>
-          <span style="font-family:var(--font-mono);font-size:10px;color:var(--muted)">6 cycles since 1984</span>
-        </div>
-        <div class="card-body">
-          <div class="prob-item">
-            <div class="prob-header"><span class="prob-name">Technology</span><span class="prob-pct">78%</span></div>
-            <div class="prob-track"><div class="prob-fill" style="width:78%;background:var(--accent);"></div></div>
-          </div>
-          <div class="prob-item">
-            <div class="prob-header"><span class="prob-name">Financials</span><span class="prob-pct">72%</span></div>
-            <div class="prob-track"><div class="prob-fill" style="width:72%;background:var(--accent);"></div></div>
-          </div>
-          <div class="prob-item">
-            <div class="prob-header"><span class="prob-name">Industrials</span><span class="prob-pct">67%</span></div>
-            <div class="prob-track"><div class="prob-fill" style="width:67%;background:var(--accent);"></div></div>
-          </div>
-          <div class="prob-item">
-            <div class="prob-header"><span class="prob-name">Healthcare</span><span class="prob-pct">61%</span></div>
-            <div class="prob-track"><div class="prob-fill" style="width:61%;background:var(--amber);"></div></div>
-          </div>
-          <div class="prob-item">
-            <div class="prob-header"><span class="prob-name">Real Estate</span><span class="prob-pct">38%</span></div>
-            <div class="prob-track"><div class="prob-fill" style="width:38%;background:var(--red);"></div></div>
-          </div>
-          <div class="prob-item">
-            <div class="prob-header"><span class="prob-name">Utilities</span><span class="prob-pct">33%</span></div>
-            <div class="prob-track"><div class="prob-fill" style="width:33%;background:var(--red);"></div></div>
-          </div>
-        </div>
+    <div>
+      <div class="section-header">
+        <span class="section-title">Live <span class="section-accent">Signals</span></span>
+        <div class="section-line"></div>
+        <span class="blink" style="font-size:8px;color:var(--accent);">●</span>
       </div>
       <div class="card">
-        <div class="card-header">
-          <div class="card-title">Post-MENA conflict resolution — 6-month avg returns</div>
-          <span style="font-family:var(--font-mono);font-size:10px;color:var(--muted)">1973, 1990, 2003, 2006 analogs</span>
-        </div>
-        <div class="card-body">
-          <div class="prob-item">
-            <div class="prob-header"><span class="prob-name">Airlines</span><span class="prob-pct up">+32%</span></div>
-            <div class="prob-track"><div class="prob-fill" style="width:80%;background:var(--accent);"></div></div>
-          </div>
-          <div class="prob-item">
-            <div class="prob-header"><span class="prob-name">S&P 500 Broad</span><span class="prob-pct up">+22%</span></div>
-            <div class="prob-track"><div class="prob-fill" style="width:55%;background:var(--accent);"></div></div>
-          </div>
-          <div class="prob-item">
-            <div class="prob-header"><span class="prob-name">Intl Developed</span><span class="prob-pct up">+18%</span></div>
-            <div class="prob-track"><div class="prob-fill" style="width:45%;background:var(--blue);"></div></div>
-          </div>
-          <div class="prob-item">
-            <div class="prob-header"><span class="prob-name">Consumer Disc.</span><span class="prob-pct up">+14%</span></div>
-            <div class="prob-track"><div class="prob-fill" style="width:35%;background:var(--blue);"></div></div>
-          </div>
-          <div class="prob-item">
-            <div class="prob-header"><span class="prob-name">Energy (reversal)</span><span class="prob-pct dn">-9%</span></div>
-            <div class="prob-track"><div class="prob-fill" style="width:22%;background:var(--red);"></div></div>
-          </div>
-          <div class="prob-item">
-            <div class="prob-header"><span class="prob-name">Defense (fade)</span><span class="prob-pct dn">-6%</span></div>
-            <div class="prob-track"><div class="prob-fill" style="width:15%;background:var(--red);"></div></div>
-          </div>
+        <div class="card-body" style="padding:4px 16px;" id="signals-feed">
+          <div class="loading-text">Loading signals...</div>
         </div>
       </div>
     </div>
-
   </div>
 
-  <!-- =============== EARNINGS TAB =============== -->
-  <div id="tab-earnings" class="tab-panel fade-in">
-
-    <div class="note-bar">
-      <strong style="color:var(--text)">Earnings season focus:</strong> Q1 2026 earnings are the first direct test of how macro events (Iran conflict, AI capex, Fed pause) are converting to actual corporate revenue. RTX (Apr 21) and XOM (Apr 25) are the two highest-signal reports of the season.
-    </div>
-
-    <div class="tab-bar">
-      <div class="tab active" onclick="showEarningsTab('upcoming', this)">Upcoming</div>
-      <div class="tab" onclick="showEarningsTab('macro-driven', this)">Macro-driven</div>
-      <div class="tab" onclick="showEarningsTab('historical', this)">Historical Patterns</div>
-    </div>
-
-    <div id="et-upcoming" class="tab-panel active">
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">Q1 2026 Earnings Calendar — Macro-Sensitive Names</div>
-          <span class="card-tag tag-active">APR–JUN 2026</span>
-        </div>
-        <div class="card-body" style="padding:0;">
-          <table class="earnings-table">
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Ticker</th>
-                <th>Company</th>
-                <th>EPS Est.</th>
-                <th>Rev Est.</th>
-                <th>Macro Theme</th>
-                <th>Expected Move</th>
-                <th>Signal</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr style="background:rgba(251,191,36,0.04);">
-                <td><div class="e-date" style="color:var(--amber)">APR 10 ●</div></td>
-                <td><div class="e-ticker">DAL</div></td>
-                <td><div class="e-name">Delta Air Lines</div></td>
-                <td><div class="e-exp dn">$0.39</div></td>
-                <td><div class="e-exp" style="color:var(--muted)">$12.4B</div></td>
-                <td><div style="font-size:11px;color:var(--muted)">Fuel cost shock + ceasefire rebound</div></td>
-                <td><div class="e-exp neu">±7%</div></td>
-                <td><span class="e-relevance rel-med">WATCH</span></td>
-              </tr>
-              <tr>
-                <td><div class="e-date">APR 21</div></td>
-                <td><div class="e-ticker">RTX</div></td>
-                <td><div class="e-name">RTX Corporation</div></td>
-                <td><div class="e-exp up">$1.48</div></td>
-                <td><div class="e-exp" style="color:var(--muted)">$20.8B</div></td>
-                <td><div style="font-size:11px;color:var(--muted)">Defense war contract conversion — key Q read</div></td>
-                <td><div class="e-exp neu">±5%</div></td>
-                <td><span class="e-relevance rel-high">HIGH</span></td>
-              </tr>
-              <tr>
-                <td><div class="e-date">APR 22</div></td>
-                <td><div class="e-ticker">LMT</div></td>
-                <td><div class="e-name">Lockheed Martin</div></td>
-                <td><div class="e-exp up">$6.34</div></td>
-                <td><div class="e-exp" style="color:var(--muted)">$17.2B</div></td>
-                <td><div style="font-size:11px;color:var(--muted)">F-35 budget doubling · $173B backlog</div></td>
-                <td><div class="e-exp neu">±4%</div></td>
-                <td><span class="e-relevance rel-high">HIGH</span></td>
-              </tr>
-              <tr>
-                <td><div class="e-date">APR 23</div></td>
-                <td><div class="e-ticker">GD</div></td>
-                <td><div class="e-name">General Dynamics</div></td>
-                <td><div class="e-exp up">$3.78</div></td>
-                <td><div class="e-exp" style="color:var(--muted)">$11.6B</div></td>
-                <td><div style="font-size:11px;color:var(--muted)">Virginia-class sub ramp · $118B backlog</div></td>
-                <td><div class="e-exp neu">±3%</div></td>
-                <td><span class="e-relevance rel-med">WATCH</span></td>
-              </tr>
-              <tr>
-                <td><div class="e-date">APR 25</div></td>
-                <td><div class="e-ticker">XOM</div></td>
-                <td><div class="e-name">ExxonMobil</div></td>
-                <td><div class="e-exp up">$2.18</div></td>
-                <td><div class="e-exp" style="color:var(--muted)">$88.4B</div></td>
-                <td><div style="font-size:11px;color:var(--muted)">US WTI vs. Brent margin · Iran shock profits</div></td>
-                <td><div class="e-exp neu">±4%</div></td>
-                <td><span class="e-relevance rel-high">HIGH</span></td>
-              </tr>
-              <tr>
-                <td><div class="e-date">APR 25</div></td>
-                <td><div class="e-ticker">CVX</div></td>
-                <td><div class="e-name">Chevron</div></td>
-                <td><div class="e-exp up">$2.84</div></td>
-                <td><div class="e-exp" style="color:var(--muted)">$47.2B</div></td>
-                <td><div style="font-size:11px;color:var(--muted)">Domestic production + oil shock margin expansion</div></td>
-                <td><div class="e-exp neu">±4%</div></td>
-                <td><span class="e-relevance rel-high">HIGH</span></td>
-              </tr>
-              <tr>
-                <td><div class="e-date">APR 28</div></td>
-                <td><div class="e-ticker">MSFT</div></td>
-                <td><div class="e-name">Microsoft</div></td>
-                <td><div class="e-exp up">$3.22</div></td>
-                <td><div class="e-exp" style="color:var(--muted)">$70.8B</div></td>
-                <td><div style="font-size:11px;color:var(--muted)">AI capex (Azure) · Copilot adoption rate</div></td>
-                <td><div class="e-exp neu">±6%</div></td>
-                <td><span class="e-relevance rel-high">HIGH</span></td>
-              </tr>
-              <tr>
-                <td><div class="e-date">APR 29</div></td>
-                <td><div class="e-ticker">META</div></td>
-                <td><div class="e-name">Meta Platforms</div></td>
-                <td><div class="e-exp up">$5.25</div></td>
-                <td><div class="e-exp" style="color:var(--muted)">$42.1B</div></td>
-                <td><div style="font-size:11px;color:var(--muted)">AI ad targeting ROI · Llama capex guidance</div></td>
-                <td><div class="e-exp neu">±7%</div></td>
-                <td><span class="e-relevance rel-med">WATCH</span></td>
-              </tr>
-              <tr>
-                <td><div class="e-date">APR 30</div></td>
-                <td><div class="e-ticker">AMZN</div></td>
-                <td><div class="e-name">Amazon</div></td>
-                <td><div class="e-exp up">$1.36</div></td>
-                <td><div class="e-exp" style="color:var(--muted)">$155.2B</div></td>
-                <td><div style="font-size:11px;color:var(--muted)">AWS AI demand · consumer spending resilience</div></td>
-                <td><div class="e-exp neu">±6%</div></td>
-                <td><span class="e-relevance rel-med">WATCH</span></td>
-              </tr>
-              <tr>
-                <td><div class="e-date">MAY 06</div></td>
-                <td><div class="e-ticker">MOS</div></td>
-                <td><div class="e-name">Mosaic Company</div></td>
-                <td><div class="e-exp up">$0.62</div></td>
-                <td><div class="e-exp" style="color:var(--muted)">$3.2B</div></td>
-                <td><div style="font-size:11px;color:var(--muted)">Gulf fertilizer disruption · ammonia shortage</div></td>
-                <td><div class="e-exp neu">±8%</div></td>
-                <td><span class="e-relevance rel-watch">EMERGING</span></td>
-              </tr>
-              <tr>
-                <td><div class="e-date">MAY 14</div></td>
-                <td><div class="e-ticker">NVDA</div></td>
-                <td><div class="e-name">NVIDIA</div></td>
-                <td><div class="e-exp up">$0.89</div></td>
-                <td><div class="e-exp" style="color:var(--muted)">$43.5B</div></td>
-                <td><div style="font-size:11px;color:var(--muted)">AI chip demand · data center revenue · H200 cycle</div></td>
-                <td><div class="e-exp neu">±10%</div></td>
-                <td><span class="e-relevance rel-high">HIGH</span></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <div id="et-macro-driven" class="tab-panel">
-      <div class="grid-3">
-        <div class="card">
-          <div class="card-header"><div class="card-title">Defense Earnings Play</div><span class="card-tag tag-watch">FADE WAR TRADE</span></div>
-          <div class="card-body">
-            <p style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:12px;">RTX (Apr 21) is the single most important earnings event of the season for macro trend tracking. It will answer: how fast does active conflict convert into revenue for defense primes?</p>
-            <div class="prob-item">
-              <div class="prob-header"><span class="prob-name">Beat on revenue</span><span class="prob-pct up">68%</span></div>
-              <div class="prob-track"><div class="prob-fill" style="width:68%;background:var(--accent);"></div></div>
-            </div>
-            <div class="prob-item">
-              <div class="prob-header"><span class="prob-name">Guidance raise</span><span class="prob-pct">52%</span></div>
-              <div class="prob-track"><div class="prob-fill" style="width:52%;background:var(--amber);"></div></div>
-            </div>
-            <div class="prob-item">
-              <div class="prob-header"><span class="prob-name">Stock reaction (+)</span><span class="prob-pct">44%</span></div>
-              <div class="prob-track"><div class="prob-fill" style="width:44%;background:var(--blue);"></div></div>
-            </div>
-            <p style="font-size:11px;color:var(--muted2);margin-top:10px;">Note: Ceasefire could suppress stock reaction even on a beat.</p>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-header"><div class="card-title">Energy Earnings Play</div><span class="card-tag tag-active">HIGH SIGNAL</span></div>
-          <div class="card-body">
-            <p style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:12px;">XOM and CVX (Apr 25) will reveal actual margin capture from WTI spike. US domestic E&P structurally insulated from Hormuz — should show strong earnings even as Brent retreats.</p>
-            <div class="prob-item">
-              <div class="prob-header"><span class="prob-name">Earnings beat</span><span class="prob-pct up">76%</span></div>
-              <div class="prob-track"><div class="prob-fill" style="width:76%;background:var(--accent);"></div></div>
-            </div>
-            <div class="prob-item">
-              <div class="prob-header"><span class="prob-name">Buyback increase</span><span class="prob-pct up">62%</span></div>
-              <div class="prob-track"><div class="prob-fill" style="width:62%;background:var(--accent);"></div></div>
-            </div>
-            <div class="prob-item">
-              <div class="prob-header"><span class="prob-name">Dividend raise</span><span class="prob-pct">41%</span></div>
-              <div class="prob-track"><div class="prob-fill" style="width:41%;background:var(--amber);"></div></div>
-            </div>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-header"><div class="card-title">AI Earnings Play</div><span class="card-tag tag-active">STRUCTURAL</span></div>
-          <div class="card-body">
-            <p style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:12px;">MSFT (Apr 28) and NVDA (May 14) are the AI capex confirmation events. Azure growth rate and NVDA data center revenue are the two most-watched numbers in tech this quarter.</p>
-            <div class="prob-item">
-              <div class="prob-header"><span class="prob-name">Azure beats</span><span class="prob-pct up">71%</span></div>
-              <div class="prob-track"><div class="prob-fill" style="width:71%;background:var(--accent);"></div></div>
-            </div>
-            <div class="prob-item">
-              <div class="prob-header"><span class="prob-name">NVDA data center +</span><span class="prob-pct up">79%</span></div>
-              <div class="prob-track"><div class="prob-fill" style="width:79%;background:var(--accent);"></div></div>
-            </div>
-            <div class="prob-item">
-              <div class="prob-header"><span class="prob-name">Capex guidance up</span><span class="prob-pct">65%</span></div>
-              <div class="prob-track"><div class="prob-fill" style="width:65%;background:var(--accent);"></div></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div id="et-historical" class="tab-panel">
-      <div class="note-bar">Historical patterns: how stocks react around earnings during macro events similar to the current regime (Fed pause + oil shock + defense cycle).
-      </div>
-      <div class="card">
-        <div class="card-body" style="padding:0;">
-          <table class="earnings-table">
-            <thead>
-              <tr>
-                <th>Historical Event</th>
-                <th>Analog</th>
-                <th>Sector</th>
-                <th>Avg beat rate</th>
-                <th>Post-earnings 30d</th>
-                <th>Key driver</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Gulf War I (1990–91) energy Q</td>
-                <td style="font-size:11px;color:var(--muted)">Iran shock 2026</td>
-                <td><span class="ticker-chip" style="display:inline-flex;">Energy</span></td>
-                <td class="up">82%</td>
-                <td class="up">+14% avg</td>
-                <td style="font-size:11px;color:var(--muted)">Oil price spike margins</td>
-              </tr>
-              <tr>
-                <td>Iraq War (2003) defense Q</td>
-                <td style="font-size:11px;color:var(--muted)">Defense supercycle</td>
-                <td><span class="ticker-chip" style="display:inline-flex;">Defense</span></td>
-                <td class="up">74%</td>
-                <td class="up">+8% avg</td>
-                <td style="font-size:11px;color:var(--muted)">Contract acceleration</td>
-              </tr>
-              <tr>
-                <td>1995 Fed pause tech</td>
-                <td style="font-size:11px;color:var(--muted)">Current rate regime</td>
-                <td><span class="ticker-chip" style="display:inline-flex;">Tech</span></td>
-                <td class="up">78%</td>
-                <td class="up">+21% 12mo</td>
-                <td style="font-size:11px;color:var(--muted)">NTM earnings re-rate</td>
-              </tr>
-              <tr>
-                <td>Post-Gulf War I airlines</td>
-                <td style="font-size:11px;color:var(--muted)">Ceasefire rotation</td>
-                <td><span class="ticker-chip" style="display:inline-flex;">Airlines</span></td>
-                <td class="dn">31%</td>
-                <td class="up">+45% 6mo</td>
-                <td style="font-size:11px;color:var(--muted)">Fuel cost reversal</td>
-              </tr>
-              <tr>
-                <td>2024 AI boom earnings</td>
-                <td style="font-size:11px;color:var(--muted)">AI buildout</td>
-                <td><span class="ticker-chip" style="display:inline-flex;">Tech/AI</span></td>
-                <td class="up">83%</td>
-                <td class="up">+19% avg</td>
-                <td style="font-size:11px;color:var(--muted)">Capex + revenue acceleration</td>
-              </tr>
-              <tr>
-                <td>Fertilizer shock (2022)</td>
-                <td style="font-size:11px;color:var(--muted)">Gulf disruption</td>
-                <td><span class="ticker-chip" style="display:inline-flex;">Materials</span></td>
-                <td class="up">69%</td>
-                <td class="up">+22% avg</td>
-                <td style="font-size:11px;color:var(--muted)">Supply shock pricing power</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
+  <div class="section-header">
+    <span class="section-title">Sector <span class="section-accent">Heatmap</span></span>
+    <div class="section-line"></div>
+    <span style="font-family:var(--font-mono);font-size:10px;color:var(--muted);">live sector ETF performance</span>
+  </div>
+  <div class="heatmap-grid" id="heatmap-grid">
+    <div class="loading-text" style="grid-column:1/-1;">Loading sector data...</div>
   </div>
 
-  <!-- =============== SECTORS TAB =============== -->
-  <div id="tab-sectors" class="tab-panel fade-in">
+</div>
 
-    <div class="grid-2" style="margin-bottom:0;">
-      <div>
-        <div class="section-header">
-          <span class="section-title">Sector <span class="section-accent">Positioning Matrix</span></span>
-          <div class="section-line"></div>
-        </div>
+<!-- ===== MOVERS TAB ===== -->
+<div id="tab-movers" class="tab-panel fade-in">
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap;">
+    <button class="mover-filter active" onclick="setMoverFilter('all',this)">All</button>
+    <button class="mover-filter" onclick="setMoverFilter('gain',this)">Gainers</button>
+    <button class="mover-filter" onclick="setMoverFilter('lose',this)">Losers</button>
+    <div style="margin-left:auto;" class="last-updated" id="movers-updated">—</div>
+  </div>
 
-        <div class="card" style="margin-bottom:16px;">
-          <div class="card-body" style="padding:0;">
-            <table class="earnings-table">
-              <thead>
-                <tr><th>Sector</th><th>Regime Stance</th><th>Catalyst</th><th>Conviction</th></tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td class="e-ticker">Defense</td>
-                  <td><span class="e-relevance rel-med">REDUCE</span></td>
-                  <td style="font-size:11px;color:var(--muted)">Peace dividend · ceasefire fade</td>
-                  <td style="font-family:var(--font-mono);font-size:11px;color:var(--amber)">HIGH</td>
-                </tr>
-                <tr>
-                  <td class="e-ticker">US E&P Energy</td>
-                  <td><span class="e-relevance rel-high">HOLD/TRIM</span></td>
-                  <td style="font-size:11px;color:var(--muted)">WTI insulated but oil retreating</td>
-                  <td style="font-family:var(--font-mono);font-size:11px;color:var(--amber)">MED</td>
-                </tr>
-                <tr>
-                  <td class="e-ticker">Airlines</td>
-                  <td><span class="e-relevance rel-watch">ADD</span></td>
-                  <td style="font-size:11px;color:var(--muted)">Fuel cost reversal · rebound trade</td>
-                  <td style="font-family:var(--font-mono);font-size:11px;color:var(--accent)">HIGH</td>
-                </tr>
-                <tr>
-                  <td class="e-ticker">Mega-cap Tech/AI</td>
-                  <td><span class="e-relevance rel-high">CORE LONG</span></td>
-                  <td style="font-size:11px;color:var(--muted)">AI capex structural · rate pause tailwind</td>
-                  <td style="font-family:var(--font-mono);font-size:11px;color:var(--accent)">HIGH</td>
-                </tr>
-                <tr>
-                  <td class="e-ticker">Financials</td>
-                  <td><span class="e-relevance rel-high">OVERWEIGHT</span></td>
-                  <td style="font-size:11px;color:var(--muted)">Volatility revenue · NIM stabilizing</td>
-                  <td style="font-family:var(--font-mono);font-size:11px;color:var(--accent)">MED-HIGH</td>
-                </tr>
-                <tr>
-                  <td class="e-ticker">Intl Developed</td>
-                  <td><span class="e-relevance rel-watch">WATCH/ADD</span></td>
-                  <td style="font-size:11px;color:var(--muted)">Energy shock reversal · 40% val discount</td>
-                  <td style="font-family:var(--font-mono);font-size:11px;color:var(--blue)">MED</td>
-                </tr>
-                <tr>
-                  <td class="e-ticker">Fertilizers/Ag</td>
-                  <td><span class="e-relevance rel-watch">EMERGING</span></td>
-                  <td style="font-size:11px;color:var(--muted)">Ammonia supply shock · Gulf disruption</td>
-                  <td style="font-family:var(--font-mono);font-size:11px;color:var(--blue)">MED</td>
-                </tr>
-                <tr>
-                  <td class="e-ticker">Gold / GDX</td>
-                  <td><span class="e-relevance rel-med">HEDGE HOLD</span></td>
-                  <td style="font-size:11px;color:var(--muted)">Safe haven floor · Fed uncertainty</td>
-                  <td style="font-family:var(--font-mono);font-size:11px;color:var(--amber)">MED</td>
-                </tr>
-                <tr>
-                  <td class="e-ticker">Real Estate</td>
-                  <td><span class="e-relevance" style="background:var(--red-dim);color:var(--red);">UNDERWEIGHT</span></td>
-                  <td style="font-size:11px;color:var(--muted)">Rate cut pause headwind · no catalyst</td>
-                  <td style="font-family:var(--font-mono);font-size:11px;color:var(--red)">HIGH</td>
-                </tr>
-                <tr>
-                  <td class="e-ticker">Utilities</td>
-                  <td><span class="e-relevance" style="background:var(--red-dim);color:var(--red);">UNDERWEIGHT</span></td>
-                  <td style="font-size:11px;color:var(--muted)">Rate sensitivity · no near-term cut</td>
-                  <td style="font-family:var(--font-mono);font-size:11px;color:var(--red)">HIGH</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
+  <div class="section-header">
+    <span class="section-title">Top <span class="section-accent">Gainers</span></span>
+    <div class="section-line"></div>
+  </div>
+  <div class="movers-grid" id="gainers-container">
+    <div class="loading-text" style="grid-column:1/-1;">Fetching live gainers...</div>
+  </div>
 
-      <div>
-        <div class="section-header">
-          <span class="section-title">Cross-Asset <span class="section-accent">Correlation</span></span>
-          <div class="section-line"></div>
-        </div>
-        <div class="card">
-          <div class="card-body">
-            <div class="chart-wrap-lg">
-              <canvas id="correlChart" role="img" aria-label="Cross-asset correlation scatter plot showing relationship between oil shock regime and sector returns"></canvas>
-            </div>
-          </div>
-        </div>
+  <div class="section-header" style="margin-top:24px;">
+    <span class="section-title">Top <span style="color:var(--red);">Losers</span></span>
+    <div class="section-line"></div>
+  </div>
+  <div class="movers-grid" id="losers-container">
+    <div class="loading-text" style="grid-column:1/-1;">Fetching live losers...</div>
+  </div>
 
-        <div class="section-header" style="margin-top:16px;">
-          <span class="section-title">Fed Cut <span class="section-accent">Probability Curve</span></span>
-          <div class="section-line"></div>
-        </div>
-        <div class="card">
-          <div class="card-body">
-            <div class="chart-wrap">
-              <canvas id="fedChart" role="img" aria-label="Fed rate cut probability by meeting date through end of 2026"></canvas>
-            </div>
-          </div>
-        </div>
+  <div class="section-header" style="margin-top:24px;">
+    <span class="section-title">Historical <span class="section-accent">Play Patterns</span></span>
+    <div class="section-line"></div>
+  </div>
+  <div class="grid-3">
+    <div class="card">
+      <div class="card-header"><div class="card-title">M&amp;A Rumor Plays</div></div>
+      <div class="card-body">
+        <div class="prob-item"><div class="prob-header"><span class="prob-name">Deal closes within 90d</span><span class="prob-pct">28%</span></div><div class="prob-track"><div class="prob-fill" style="width:28%;background:var(--accent);"></div></div></div>
+        <div class="prob-item"><div class="prob-header"><span class="prob-name">Holds 50%+ of spike at 30d</span><span class="prob-pct">44%</span></div><div class="prob-track"><div class="prob-fill" style="width:44%;background:var(--amber);"></div></div></div>
+        <div class="prob-item"><div class="prob-header"><span class="prob-name">Full giveback if no deal</span><span class="prob-pct">61%</span></div><div class="prob-track"><div class="prob-fill" style="width:61%;background:var(--red);"></div></div></div>
       </div>
     </div>
-
+    <div class="card">
+      <div class="card-header"><div class="card-title">AI Disruption Selloffs</div></div>
+      <div class="card-body">
+        <div class="prob-item"><div class="prob-header"><span class="prob-name">Recovery within 45 days</span><span class="prob-pct up">78%</span></div><div class="prob-track"><div class="prob-fill" style="width:78%;background:var(--accent);"></div></div></div>
+        <div class="prob-item"><div class="prob-header"><span class="prob-name">Exceeds pre-drop price</span><span class="prob-pct">54%</span></div><div class="prob-track"><div class="prob-fill" style="width:54%;background:var(--amber);"></div></div></div>
+        <div class="prob-item"><div class="prob-header"><span class="prob-name">Outperforms SPX in 90d</span><span class="prob-pct">62%</span></div><div class="prob-track"><div class="prob-fill" style="width:62%;background:var(--blue);"></div></div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-title">Ceasefire Rebound</div></div>
+      <div class="card-body">
+        <div class="prob-item"><div class="prob-header"><span class="prob-name">Airlines +20%+ in 60d</span><span class="prob-pct up">71%</span></div><div class="prob-track"><div class="prob-fill" style="width:71%;background:var(--accent);"></div></div></div>
+        <div class="prob-item"><div class="prob-header"><span class="prob-name">Cruises outperform airlines</span><span class="prob-pct">58%</span></div><div class="prob-track"><div class="prob-fill" style="width:58%;background:var(--accent);"></div></div></div>
+        <div class="prob-item"><div class="prob-header"><span class="prob-name">Oil re-spikes &gt;10% in 30d</span><span class="prob-pct dn">34%</span></div><div class="prob-track"><div class="prob-fill" style="width:34%;background:var(--red);"></div></div></div>
+      </div>
+    </div>
   </div>
+</div>
+
+<!-- ===== TRENDS TAB ===== -->
+<div id="tab-trends" class="tab-panel fade-in">
+  <div class="note-bar"><strong style="color:var(--text);">Active macro triggers:</strong> Fed pause (3.5–3.75%) · Iran conflict energy shock · defense supercycle · AI infrastructure buildout · ceasefire rotation emerging.</div>
+
+  <div class="section-header"><span class="section-title">Trigger 1 — <span class="section-accent">Fed Rate Pause</span></span><div class="section-line"></div><span class="card-tag tag-active">ACTIVE</span></div>
+  <div class="card" style="margin-bottom:16px;">
+    <div class="card-body">
+      <p style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:12px;">Fed held at 3.5–3.75% for 2nd consecutive meeting in March 2026. One cut expected H2 2026. In non-recessionary pauses: tech/quality outperforms 78% of the time. REITs and utilities underperform until next cut resumes.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;">
+        <span class="ticker-chip"><span class="chip-arrow up">▲</span>MSFT</span><span class="ticker-chip"><span class="chip-arrow up">▲</span>NVDA</span><span class="ticker-chip"><span class="chip-arrow up">▲</span>AAPL</span><span class="ticker-chip"><span class="chip-arrow up">▲</span>JPM</span><span class="ticker-chip"><span class="chip-arrow up">▲</span>GS</span><span class="ticker-chip"><span class="chip-arrow dn">▼</span>VNQ</span><span class="ticker-chip"><span class="chip-arrow dn">▼</span>AMT</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-header"><span class="section-title">Trigger 2 — <span class="section-accent">Middle East Oil Shock</span></span><div class="section-line"></div><span class="card-tag tag-watch">RESOLVING</span></div>
+  <div class="card" style="margin-bottom:16px;">
+    <div class="card-body">
+      <p style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:12px;">Brent peaked ~$120, retreating on ceasefire. US domestic E&P (WTI-exposed) insulated from Hormuz disruption. Airlines hardest hit, now highest-beta ceasefire rebound. Gulf War I analog: S&P +30% in 6mo post-resolution.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;">
+        <span class="ticker-chip"><span class="chip-arrow up">▲</span>XOM</span><span class="ticker-chip"><span class="chip-arrow up">▲</span>CVX</span><span class="ticker-chip"><span class="chip-arrow up">▲</span>COP</span><span class="ticker-chip"><span class="chip-arrow up">▲</span>GLD</span><span class="ticker-chip"><span class="chip-arrow up">▲</span>MOS</span><span class="ticker-chip"><span class="chip-arrow dn">▼</span>DAL (rebounding)</span><span class="ticker-chip"><span class="chip-arrow dn">▼</span>UAL (rebounding)</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-header"><span class="section-title">Trigger 3 — <span class="section-accent">Defense Supercycle</span></span><div class="section-line"></div><span class="card-tag tag-watch">FADE WAR TRADE</span></div>
+  <div class="card" style="margin-bottom:16px;">
+    <div class="card-body">
+      <p style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:12px;">$1.5T FY2027 defense budget. Global spend $2.6T (+8.1%). Defense surged to ATH in March, now fading on ceasefire ("sell the news"). Durable play: multi-year backlogs not conflict speculation. RTX Q1 earnings = first direct war revenue test.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;">
+        <span class="ticker-chip"><span class="chip-arrow up">▲</span>RTX ($268B backlog)</span><span class="ticker-chip"><span class="chip-arrow up">▲</span>GD</span><span class="ticker-chip"><span class="chip-arrow neu">◆</span>LMT</span><span class="ticker-chip"><span class="chip-arrow up">▲</span>NOC (B-21)</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-header"><span class="section-title">Trigger 4 — <span class="section-accent">AI Infrastructure</span></span><div class="section-line"></div><span class="card-tag tag-active">STRUCTURAL</span></div>
+  <div class="card" style="margin-bottom:16px;">
+    <div class="card-body">
+      <p style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:12px;">Big tech reaffirmed AI capex in Q1 '26. Most durable theme — contractual, not cyclical. VST +304% in 2024 (AI power). NVDA +173% in 2024. AI capex reaffirmed despite warflation pressure.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;">
+        <span class="ticker-chip"><span class="chip-arrow up">▲</span>NVDA</span><span class="ticker-chip"><span class="chip-arrow up">▲</span>AVGO</span><span class="ticker-chip"><span class="chip-arrow up">▲</span>MSFT</span><span class="ticker-chip"><span class="chip-arrow up">▲</span>VST</span><span class="ticker-chip"><span class="chip-arrow up">▲</span>CEG</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-header"><span class="section-title">Win Rates — <span class="section-accent">Non-Recessionary Pause</span></span><div class="section-line"></div></div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header"><div class="card-title">Sector outperformance probability</div><span style="font-family:var(--font-mono);font-size:10px;color:var(--muted);">6 cycles since 1984</span></div>
+      <div class="card-body">
+        <div class="prob-item"><div class="prob-header"><span class="prob-name">Technology</span><span class="prob-pct up">78%</span></div><div class="prob-track"><div class="prob-fill" style="width:78%;background:var(--accent);"></div></div></div>
+        <div class="prob-item"><div class="prob-header"><span class="prob-name">Financials</span><span class="prob-pct up">72%</span></div><div class="prob-track"><div class="prob-fill" style="width:72%;background:var(--accent);"></div></div></div>
+        <div class="prob-item"><div class="prob-header"><span class="prob-name">Industrials</span><span class="prob-pct">67%</span></div><div class="prob-track"><div class="prob-fill" style="width:67%;background:var(--amber);"></div></div></div>
+        <div class="prob-item"><div class="prob-header"><span class="prob-name">Real Estate</span><span class="prob-pct dn">38%</span></div><div class="prob-track"><div class="prob-fill" style="width:38%;background:var(--red);"></div></div></div>
+        <div class="prob-item"><div class="prob-header"><span class="prob-name">Utilities</span><span class="prob-pct dn">33%</span></div><div class="prob-track"><div class="prob-fill" style="width:33%;background:var(--red);"></div></div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-title">Post-MENA ceasefire — 6mo avg returns</div></div>
+      <div class="card-body">
+        <div class="prob-item"><div class="prob-header"><span class="prob-name">Airlines</span><span class="prob-pct up">+32%</span></div><div class="prob-track"><div class="prob-fill" style="width:80%;background:var(--accent);"></div></div></div>
+        <div class="prob-item"><div class="prob-header"><span class="prob-name">S&P 500 Broad</span><span class="prob-pct up">+22%</span></div><div class="prob-track"><div class="prob-fill" style="width:55%;background:var(--accent);"></div></div></div>
+        <div class="prob-item"><div class="prob-header"><span class="prob-name">Intl Developed</span><span class="prob-pct up">+18%</span></div><div class="prob-track"><div class="prob-fill" style="width:45%;background:var(--blue);"></div></div></div>
+        <div class="prob-item"><div class="prob-header"><span class="prob-name">Energy (reversal)</span><span class="prob-pct dn">-9%</span></div><div class="prob-track"><div class="prob-fill" style="width:22%;background:var(--red);"></div></div></div>
+        <div class="prob-item"><div class="prob-header"><span class="prob-name">Defense (fade)</span><span class="prob-pct dn">-6%</span></div><div class="prob-track"><div class="prob-fill" style="width:15%;background:var(--red);"></div></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== EARNINGS TAB ===== -->
+<div id="tab-earnings" class="tab-panel fade-in">
+  <div class="note-bar"><strong style="color:var(--text);">Q1 2026 earnings season:</strong> RTX (Apr 21) and XOM (Apr 25) are the two highest-signal reports. First direct test of how macro events convert to corporate revenue.</div>
+  <div class="card">
+    <div class="card-body" style="padding:0;">
+      <table class="earnings-table">
+        <thead><tr><th>Date</th><th>Ticker</th><th>Company</th><th>EPS Est.</th><th>Macro Theme</th><th>Move Est.</th><th>Signal</th></tr></thead>
+        <tbody>
+          <tr><td><div class="e-date" style="color:var(--amber);">APR 21</div></td><td><div class="e-ticker">RTX</div></td><td><div class="e-name">RTX Corporation</div></td><td><div class="e-exp up">$1.48</div></td><td><div style="font-size:11px;color:var(--muted);">Defense war contract conversion — key Q read</div></td><td><div class="e-exp neu">±5%</div></td><td><span class="e-relevance rel-high">HIGH</span></td></tr>
+          <tr><td><div class="e-date">APR 22</div></td><td><div class="e-ticker">LMT</div></td><td><div class="e-name">Lockheed Martin</div></td><td><div class="e-exp up">$6.34</div></td><td><div style="font-size:11px;color:var(--muted);">F-35 doubling · $173B backlog</div></td><td><div class="e-exp neu">±4%</div></td><td><span class="e-relevance rel-high">HIGH</span></td></tr>
+          <tr><td><div class="e-date">APR 25</div></td><td><div class="e-ticker">XOM</div></td><td><div class="e-name">ExxonMobil</div></td><td><div class="e-exp up">$2.18</div></td><td><div style="font-size:11px;color:var(--muted);">US WTI margin vs. Brent spike</div></td><td><div class="e-exp neu">±4%</div></td><td><span class="e-relevance rel-high">HIGH</span></td></tr>
+          <tr><td><div class="e-date">APR 25</div></td><td><div class="e-ticker">CVX</div></td><td><div class="e-name">Chevron</div></td><td><div class="e-exp up">$2.84</div></td><td><div style="font-size:11px;color:var(--muted);">Domestic production + oil shock margins</div></td><td><div class="e-exp neu">±4%</div></td><td><span class="e-relevance rel-high">HIGH</span></td></tr>
+          <tr><td><div class="e-date">APR 23</div></td><td><div class="e-ticker">GD</div></td><td><div class="e-name">General Dynamics</div></td><td><div class="e-exp up">$3.78</div></td><td><div style="font-size:11px;color:var(--muted);">Virginia-class sub ramp · $118B backlog</div></td><td><div class="e-exp neu">±3%</div></td><td><span class="e-relevance rel-med">WATCH</span></td></tr>
+          <tr><td><div class="e-date">APR 28</div></td><td><div class="e-ticker">MSFT</div></td><td><div class="e-name">Microsoft</div></td><td><div class="e-exp up">$3.22</div></td><td><div style="font-size:11px;color:var(--muted);">AI capex · Azure cloud growth rate</div></td><td><div class="e-exp neu">±6%</div></td><td><span class="e-relevance rel-high">HIGH</span></td></tr>
+          <tr><td><div class="e-date">APR 29</div></td><td><div class="e-ticker">META</div></td><td><div class="e-name">Meta Platforms</div></td><td><div class="e-exp up">$5.25</div></td><td><div style="font-size:11px;color:var(--muted);">AI ad targeting · Llama capex guidance</div></td><td><div class="e-exp neu">±7%</div></td><td><span class="e-relevance rel-med">WATCH</span></td></tr>
+          <tr><td><div class="e-date">APR 30</div></td><td><div class="e-ticker">AMZN</div></td><td><div class="e-name">Amazon</div></td><td><div class="e-exp up">$1.36</div></td><td><div style="font-size:11px;color:var(--muted);">AWS AI demand · consumer spending</div></td><td><div class="e-exp neu">±6%</div></td><td><span class="e-relevance rel-med">WATCH</span></td></tr>
+          <tr><td><div class="e-date">MAY 06</div></td><td><div class="e-ticker">MOS</div></td><td><div class="e-name">Mosaic Company</div></td><td><div class="e-exp up">$0.62</div></td><td><div style="font-size:11px;color:var(--muted);">Gulf fertilizer disruption · ammonia shortage</div></td><td><div class="e-exp neu">±8%</div></td><td><span class="e-relevance rel-watch">EMERGING</span></td></tr>
+          <tr><td><div class="e-date">MAY 14</div></td><td><div class="e-ticker">NVDA</div></td><td><div class="e-name">NVIDIA</div></td><td><div class="e-exp up">$0.89</div></td><td><div style="font-size:11px;color:var(--muted);">AI chip demand · H200 data center cycle</div></td><td><div class="e-exp neu">±10%</div></td><td><span class="e-relevance rel-high">HIGH</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ===== NEWS TAB ===== -->
+<div id="tab-news" class="tab-panel fade-in">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+    <div style="font-family:var(--font-mono);font-size:11px;color:var(--muted);">Live market news · auto-refreshes every 5 min</div>
+    <div class="last-updated" id="news-updated">—</div>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header"><div class="card-title">Market News Feed</div><span class="card-tag tag-active">LIVE</span></div>
+      <div class="card-body" id="news-feed" style="padding:4px 16px;max-height:600px;overflow-y:auto;">
+        <div class="loading-text">Loading news...</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-title">Watchlist News</div><span style="font-family:var(--font-mono);font-size:10px;color:var(--muted);">key macro tickers</span></div>
+      <div class="card-body" id="watchlist-news" style="padding:4px 16px;max-height:600px;overflow-y:auto;">
+        <div class="loading-text">Loading watchlist news...</div>
+      </div>
+    </div>
+  </div>
+</div>
 
 </main>
 
 <footer class="footer">
-  <div class="footer-left">SIGNAL — Macro Intelligence Terminal · v2.6.1 · Data sourced from IEA, J.P. Morgan, Goldman Sachs, Morgan Stanley, BlackRock, CFA Institute, Wedbush, CSIS</div>
-  <div class="footer-right">For analytical purposes only. Not investment advice. · <span id="footer-time"></span></div>
+  <div class="footer-left">SIGNAL — Macro Intelligence Terminal · Powered by Financial Modeling Prep · Auto-refreshes every 5 min</div>
+  <div class="footer-right">Not investment advice · <span id="footer-time">—</span></div>
 </footer>
 
 <script>
-  // --- CLOCK ---
-  function updateClock() {
-    const now = new Date();
-    const opts = { timeZone: 'America/New_York', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
-    const timeStr = now.toLocaleTimeString('en-US', opts);
-    const dateStr = 'APR 09, 2026';
-    document.getElementById('live-clock').textContent = `${dateStr} — ${timeStr} ET`;
-    document.getElementById('footer-time').textContent = timeStr + ' ET';
+// ============================================================
+// CONFIG
+// ============================================================
+const API_KEY = 'lJabpG5yf053khSaZUvmD7xGCGngLY4L';
+const BASE    = 'https://financialmodelingprep.com/api/v3';
+const REFRESH_MS = 5 * 60 * 1000; // 5 minutes
+
+// Macro watchlist for tape + quotes
+const WATCHLIST = ['SPY','QQQ','DIA','VIX','GLD','USO','RTX','LMT','NOC','GD',
+                   'XOM','CVX','DAL','UAL','NVDA','MSFT','MOS','NET','TPL','CCL'];
+
+// Sector ETFs for heatmap
+const SECTORS = [
+  {sym:'XLK',name:'Technology',theme:'AI + rate pause tailwind'},
+  {sym:'XLF',name:'Financials',theme:'volatility revenue'},
+  {sym:'ITA',name:'Defense',theme:'supercycle but fading war trade'},
+  {sym:'XLE',name:'Energy',theme:'Iran shock beneficiary'},
+  {sym:'JETS',name:'Airlines',theme:'ceasefire rebound play'},
+  {sym:'XLI',name:'Industrials',theme:'pricing power'},
+  {sym:'GLD',name:'Gold',theme:'safe-haven hedge'},
+  {sym:'XLRE',name:'Real Estate',theme:'rate pause headwind'},
+];
+
+// ============================================================
+// CLOCK & MARKET STATUS
+// ============================================================
+function updateClock() {
+  const now = new Date();
+  const et = new Date(now.toLocaleString('en-US',{timeZone:'America/New_York'}));
+  const h = et.getHours(), m = et.getMinutes(), s = et.getSeconds(), d = et.getDay();
+  const pad = n => String(n).padStart(2,'0');
+  document.getElementById('live-clock').textContent =
+    `${et.toLocaleDateString('en-US',{month:'short',day:'2-digit',year:'numeric'})} — ${pad(h)}:${pad(m)}:${pad(s)} ET`;
+  document.getElementById('footer-time').textContent = `${pad(h)}:${pad(m)}:${pad(s)} ET`;
+
+  const badge = document.getElementById('market-status-badge');
+  const isWeekday = d>=1 && d<=5;
+  const minsSinceMidnight = h*60+m;
+  if (isWeekday && minsSinceMidnight >= 570 && minsSinceMidnight < 960) {
+    badge.textContent = '● MARKET OPEN'; badge.className = 'market-status status-open';
+  } else if (isWeekday && minsSinceMidnight >= 540 && minsSinceMidnight < 570) {
+    badge.textContent = '◐ PRE-MARKET'; badge.className = 'market-status status-pre';
+  } else if (isWeekday && minsSinceMidnight >= 960 && minsSinceMidnight < 1200) {
+    badge.textContent = '◑ AFTER HOURS'; badge.className = 'market-status status-pre';
+  } else {
+    badge.textContent = '○ MARKET CLOSED'; badge.className = 'market-status status-closed';
   }
-  setInterval(updateClock, 1000);
-  updateClock();
+}
+setInterval(updateClock, 1000);
+updateClock();
 
-  // --- TICKER TAPE ---
-  const tickers = [
-    { sym: 'RTX', price: '238.40', chg: '+2.81%', up: true },
-    { sym: 'LMT', price: '469.20', chg: '-0.14%', up: false },
-    { sym: 'DAL', price: '42.18', chg: '+4.23%', up: true },
-    { sym: 'UAL', price: '71.44', chg: '+3.81%', up: true },
-    { sym: 'XOM', price: '104.62', chg: '-1.20%', up: false },
-    { sym: 'CVX', price: '148.90', chg: '-0.88%', up: false },
-    { sym: 'NVDA', price: '884.22', chg: '+2.14%', up: true },
-    { sym: 'MSFT', price: '412.60', chg: '+1.02%', up: true },
-    { sym: 'GLD', price: '247.50', chg: '-0.34%', up: false },
-    { sym: 'GS', price: '528.44', chg: '+0.72%', up: true },
-    { sym: 'JPM', price: '238.90', chg: '+0.55%', up: true },
-    { sym: 'NOC', price: '484.20', chg: '+5.92%', up: true },
-    { sym: 'GD', price: '298.10', chg: '+0.46%', up: true },
-    { sym: 'VST', price: '158.44', chg: '+1.33%', up: true },
-    { sym: 'MOS', price: '28.72', chg: '+3.41%', up: true },
-    { sym: 'VNQ', price: '76.22', chg: '-0.92%', up: false },
-    { sym: 'BZ=F', price: '$92.40', chg: '-8.20%', up: false },
-    { sym: 'GC=F', price: '$5,380', chg: '-0.80%', up: false },
-    { sym: 'SPX', price: '5,641', chg: '+0.62%', up: true },
-    { sym: 'VIX', price: '22.4', chg: '-3.10', up: false },
-  ];
+// ============================================================
+// FMP FETCH HELPER
+// ============================================================
+async function fmpFetch(endpoint) {
+  const sep = endpoint.includes('?') ? '&' : '?';
+  const res = await fetch(`${BASE}${endpoint}${sep}apikey=${API_KEY}`);
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return res.json();
+}
 
-  function buildTape() {
-    const tape = document.getElementById('tape');
-    const html = [...tickers, ...tickers].map(t => `
-      <div class="tape-item">
-        <span class="tape-sym">${t.sym}</span>
-        <span class="tape-price">${t.price}</span>
-        <span class="tape-chg ${t.up ? 'up' : 'dn'}">${t.chg}</span>
-      </div>`).join('');
-    tape.innerHTML = html;
-  }
-  buildTape();
+// ============================================================
+// FORMAT HELPERS
+// ============================================================
+function fmt(n, dec=2) { return n == null ? '—' : Number(n).toFixed(dec); }
+function fmtLarge(n) {
+  if (n == null) return '—';
+  if (Math.abs(n)>=1e12) return '$'+(n/1e12).toFixed(1)+'T';
+  if (Math.abs(n)>=1e9)  return '$'+(n/1e9).toFixed(1)+'B';
+  if (Math.abs(n)>=1e6)  return '$'+(n/1e6).toFixed(1)+'M';
+  return '$'+n.toFixed(0);
+}
+function chgClass(n) { return n>0?'up':n<0?'dn':'neu'; }
+function chgArrow(n) { return n>0?'▲':n<0?'▼':'—'; }
+function timeAgo(ts) {
+  const diff = Math.floor((Date.now()-new Date(ts).getTime())/1000);
+  if (diff<60) return `${diff}s ago`;
+  if (diff<3600) return `${Math.floor(diff/60)}m ago`;
+  return `${Math.floor(diff/3600)}h ago`;
+}
+function nowStr() {
+  return new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',timeZone:'America/New_York'})+' ET';
+}
 
-  // --- TAB NAVIGATION ---
-  function showTab(name) {
-    ['overview','trends','earnings','sectors'].forEach(t => {
-      const panel = document.getElementById(`tab-${t}`);
-      if (panel) panel.classList.remove('active');
+// ============================================================
+// QUOTES — metrics + ticker tape
+// ============================================================
+async function loadQuotes() {
+  try {
+    const data = await fmpFetch(`/quote/${WATCHLIST.join(',')}`);
+    if (!Array.isArray(data)) return;
+    const map = {};
+    data.forEach(q => map[q.symbol] = q);
+
+    // Metrics row
+    const metrics = [
+      {id:'m-spy', sym:'SPY', chgId:'m-spy-chg'},
+      {id:'m-qqq', sym:'QQQ', chgId:'m-qqq-chg'},
+      {id:'m-dia', sym:'DIA', chgId:'m-dia-chg'},
+      {id:'m-vix', sym:'VIX', chgId:'m-vix-chg'},
+      {id:'m-gld', sym:'GLD', chgId:'m-gld-chg'},
+      {id:'m-uso', sym:'USO', chgId:'m-uso-chg'},
+    ];
+    metrics.forEach(({id,sym,chgId}) => {
+      const q = map[sym]; if (!q) return;
+      const pEl = document.getElementById(id);
+      const cEl = document.getElementById(chgId);
+      if (pEl) pEl.textContent = sym==='VIX' ? fmt(q.price,1) : '$'+fmt(q.price,2);
+      if (cEl) {
+        const pct = q.changesPercentage;
+        cEl.className = 'metric-chg '+chgClass(pct);
+        cEl.textContent = `${chgArrow(pct)} ${pct>0?'+':''}${fmt(pct,2)}%`;
+      }
     });
-    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-    const panel = document.getElementById(`tab-${name}`);
-    if (panel) { panel.classList.add('active'); panel.classList.add('fade-in'); }
-    event.target.classList.add('active');
+
+    // Ticker tape
+    buildTape(data);
+
+    // Signals based on live data
+    buildSignals(map);
+  } catch(e) {
+    console.error('Quotes error:', e);
+  }
+}
+
+// ============================================================
+// TAPE
+// ============================================================
+function buildTape(quotes) {
+  const track = document.getElementById('tape-track');
+  const items = [...quotes, ...quotes].map(q => {
+    const pct = q.changesPercentage;
+    const cls = pct>0?'up':pct<0?'dn':'';
+    return `<div class="tape-item">
+      <span class="tape-sym">${q.symbol}</span>
+      <span class="tape-price">$${fmt(q.price,2)}</span>
+      <span class="tape-chg ${cls}">${pct>0?'+':''}${fmt(pct,2)}%</span>
+    </div>`;
+  }).join('');
+  track.innerHTML = items;
+}
+
+// ============================================================
+// LIVE SIGNALS (derived from quotes)
+// ============================================================
+function buildSignals(map) {
+  const items = [];
+  const get = sym => map[sym];
+
+  // Dynamic signal generation based on live prices
+  const dal = get('DAL'), ual = get('UAL'), xom = get('XOM'), nvda = get('NVDA');
+  const rtx = get('RTX'), lmt = get('LMT'), net = get('NET'), gld = get('GLD');
+
+  if (dal && dal.changesPercentage > 2)
+    items.push({icon:'📈',cls:'si-green',title:`Airlines Surging — DAL +${fmt(dal.changesPercentage,1)}%`,body:'Ceasefire optimism + fuel cost reversal driving airline rebound.',time:'CEASEFIRE PLAY'});
+  if (dal && dal.changesPercentage < -2)
+    items.push({icon:'⚠️',cls:'si-red',title:`Airlines Under Pressure — DAL ${fmt(dal.changesPercentage,1)}%`,body:'Oil spike or ceasefire uncertainty pressuring fuel-sensitive names.',time:'WATCH CRUDE'});
+  if (nvda && nvda.changesPercentage > 2)
+    items.push({icon:'🤖',cls:'si-blue',title:`NVDA +${fmt(nvda.changesPercentage,1)}% — AI Capex Confirmed`,body:'AI infrastructure buildout remains the most durable structural trade.',time:'AI STRUCTURAL'});
+  if (rtx && rtx.changesPercentage > 2)
+    items.push({icon:'🛡️',cls:'si-amber',title:`RTX +${fmt(rtx.changesPercentage,1)}% — Defense Bid`,body:'Watch Apr 21 Q1 earnings — first direct war contract revenue conversion.',time:'DEFENSE CATALYST'});
+  if (lmt && lmt.changesPercentage < -1.5)
+    items.push({icon:'📉',cls:'si-red',title:`LMT ${fmt(lmt.changesPercentage,1)}% — Peace Dividend Fade`,body:'Multi-year backlog intact. Structural buy on further weakness.',time:'FADE WAR TRADE'});
+  if (gld && gld.changesPercentage > 1)
+    items.push({icon:'💎',cls:'si-amber',title:`Gold Rising +${fmt(gld.changesPercentage,1)}% — Safe Haven Bid`,body:'Geopolitical uncertainty keeping safe-haven premium elevated.',time:'MACRO HEDGE'});
+  if (xom && xom.changesPercentage > 1.5)
+    items.push({icon:'⚡',cls:'si-green',title:`XOM +${fmt(xom.changesPercentage,1)}% — Energy Margin Capture`,body:'US domestic WTI producers structurally insulated from Hormuz disruption.',time:'ENERGY PLAY'});
+
+  if (items.length === 0) {
+    items.push({icon:'📊',cls:'si-blue',title:'Markets Quiet — Monitoring...',body:'No outsized moves detected. Watching ceasefire developments and Fed commentary.',time:'LIVE SCAN'});
   }
 
-  function showEarningsTab(name, el) {
-    ['upcoming','macro-driven','historical'].forEach(t => {
-      const p = document.getElementById(`et-${t}`);
-      if(p) p.classList.remove('active');
-    });
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    const p = document.getElementById(`et-${name}`);
-    if(p) p.classList.add('active');
-    el.classList.add('active');
+  document.getElementById('signals-feed').innerHTML = items.map(s => `
+    <div class="signal-item">
+      <div class="signal-icon ${s.cls}">${s.icon}</div>
+      <div class="signal-content">
+        <div class="signal-title">${s.title}</div>
+        <div class="signal-body">${s.body}</div>
+        <div class="signal-time">${nowStr()} · ${s.time}</div>
+      </div>
+    </div>`).join('');
+}
+
+// ============================================================
+// SECTOR HEATMAP
+// ============================================================
+async function loadHeatmap() {
+  try {
+    const syms = SECTORS.map(s=>s.sym).join(',');
+    const data = await fmpFetch(`/quote/${syms}`);
+    if (!Array.isArray(data)) return;
+    const map = {};
+    data.forEach(q => map[q.symbol] = q);
+
+    const grid = document.getElementById('heatmap-grid');
+    grid.innerHTML = SECTORS.map(sec => {
+      const q = map[sec.sym];
+      const pct = q ? q.changesPercentage : 0;
+      let bgCls = 'bg-flat', textCls = 'style="color:var(--muted)"';
+      if (pct >= 3)       { bgCls='bg-strong-up'; textCls='class="up"'; }
+      else if (pct >= 1)  { bgCls='bg-up';         textCls='class="up"'; }
+      else if (pct >= 0)  { bgCls='bg-slight-up';  textCls='class="up"'; }
+      else if (pct >= -1) { bgCls='bg-slight-dn';  textCls='class="dn"'; }
+      else if (pct >= -3) { bgCls='bg-dn';          textCls='class="dn"'; }
+      else                { bgCls='bg-strong-dn';   textCls='class="dn"'; }
+
+      return `<div class="heatmap-cell ${bgCls}">
+        <div class="hm-name" ${textCls}>${sec.name}</div>
+        <div class="hm-pct" ${textCls}>${pct>=0?'+':''}${fmt(pct,1)}%</div>
+        <div class="hm-label" ${textCls}>${sec.theme}</div>
+      </div>`;
+    }).join('');
+  } catch(e) {
+    document.getElementById('heatmap-grid').innerHTML = '<div class="error-text">Could not load sector data</div>';
   }
+}
 
-  // --- CHARTS ---
-  const isDark = true;
-  const gridColor = 'rgba(255,255,255,0.07)';
-  const textColor = '#6b7280';
+// ============================================================
+// GAINERS & LOSERS
+// ============================================================
 
-  Chart.defaults.font.family = "'DM Mono', monospace";
-  Chart.defaults.color = textColor;
+// Macro context lookup for known tickers
+const MACRO_CONTEXT = {
+  XOM:{theme:'US E&P · WTI insulated from Hormuz',play:'Domestic oil margin expansion as Brent spikes. Every $10 Brent rise = significant EPS uplift. Hold through XOM Apr 25 earnings.',tag:'buy',tagLabel:'ENERGY LONG'},
+  CVX:{theme:'Domestic oil producer · Iran shock beneficiary',play:'Same WTI insulation thesis as XOM. Chevron has cleaner balance sheet. Apr 25 earnings key catalyst.',tag:'buy',tagLabel:'ENERGY LONG'},
+  DAL:{theme:'Ceasefire rebound · fuel cost reversal',play:'Gulf War I analog: airlines fell 35%, gained +45% in 6mo post-resolution. Highest operating leverage to oil prices.',tag:'buy',tagLabel:'CEASEFIRE LONG'},
+  UAL:{theme:'Ceasefire rebound · United Airlines',play:'Every $10/bbl drop in jet fuel = ~$2–3B industry savings. UAL has highest fuel cost exposure = highest beta to oil reversal.',tag:'buy',tagLabel:'CEASEFIRE LONG'},
+  RTX:{theme:'Defense supercycle · $268B backlog',play:'Apr 21 Q1 earnings = first war revenue conversion test. $268B backlog provides multi-year visibility regardless of ceasefire.',tag:'buy',tagLabel:'DEFENSE CORE'},
+  LMT:{theme:'Defense fade · peace dividend pressure',play:'Multi-year $173B backlog and 2.8% dividend provide floor. Apr 22 earnings catalyst. Buy weakness; avoid chasing.',tag:'watch',tagLabel:'HOLD · BUY WEAKNESS'},
+  NOC:{theme:'B-21 Raider · nuclear triad insulation',play:'Most peace-proof defense prime. B-21 program continues regardless of ceasefire. Long-cycle strategic programs underpin earnings.',tag:'buy',tagLabel:'DURABLE LONG'},
+  GD:{theme:'Virginia-class sub ramp · $118B backlog',play:'Submarine programs are decade-long — completely immune to ceasefire. $118B backlog quality is best in class.',tag:'buy',tagLabel:'BACKLOG PLAY'},
+  NVDA:{theme:'AI semiconductor · data center demand',play:'AI capex cycle structural and reaffirmed. Watch May 14 earnings for H200/B200 demand commentary.',tag:'buy',tagLabel:'AI CORE'},
+  AVGO:{theme:'AI networking · custom silicon',play:'Hyperscaler custom AI chip contracts = predictable revenue. Earnings clarity outweighs macro noise.',tag:'buy',tagLabel:'AI INFRA'},
+  GLD:{theme:'Safe-haven bid · Fed uncertainty',play:'Gold floor supported by geopolitical risk + Fed uncertainty. Ceasefire resolution could trim premium 5–8%.',tag:'watch',tagLabel:'MACRO HEDGE'},
+  NET:{theme:'Cybersecurity · AI disruption selloff',play:'Historical: AI-driven cyberscurity selloffs recover 78% of the time within 45 days. Strong moat. Buy the dip.',tag:'buy',tagLabel:'BUY THE DIP'},
+  CCL:{theme:'Cruise · ceasefire + fuel reversal',play:'Doubly hurt by conflict (fuel + routes). Doubly benefits from resolution. Higher risk than airlines but higher reward.',tag:'buy',tagLabel:'RECOVERY PLAY'},
+  MOS:{theme:'Fertilizer · Gulf ammonia supply shock',play:'Strait disruption cuts Gulf ammonia supply to Brazil (60% of global soy). Pricing power surge expected.',tag:'buy',tagLabel:'EMERGING PLAY'},
+  TPL:{theme:'Oil royalty · pure WTI price proxy',play:'100% revenue leverage to oil prices. Trade not invest. If ceasefire holds, further pressure. If oil re-spikes, TPL leads.',tag:'watch',tagLabel:'OIL PROXY · TRADE'},
+  VST:{theme:'AI power demand · data center electricity',play:'+304% in 2024. Long-term power purchase agreements with hyperscalers = contractual, not cyclical revenue.',tag:'buy',tagLabel:'AI POWER PLAY'},
+};
 
-  // SECTOR PERFORMANCE CHART
-  new Chart(document.getElementById('sectorChart'), {
-    type: 'bar',
-    data: {
-      labels: ['Tech/AI', 'Financials', 'Defense', 'US Energy', 'Airlines', 'REITs', 'Gold', 'Fertilizers', 'Intl DM'],
-      datasets: [
-        {
-          label: 'Fed Pause',
-          data: [12, 9, 4, 5, 2, -3, 1, 3, 6],
-          backgroundColor: 'rgba(200,240,106,0.75)',
-        },
-        {
-          label: 'Oil Shock',
-          data: [-8, -2, 15, 28, -22, -4, 9, 18, -14],
-          backgroundColor: 'rgba(248,113,113,0.75)',
-        },
-        {
-          label: 'Ceasefire',
-          data: [7, 5, -6, -12, 32, 3, -5, -8, 18],
-          backgroundColor: 'rgba(96,165,250,0.75)',
-        }
-      ]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          backgroundColor: '#161b21',
-          borderColor: 'rgba(255,255,255,0.1)',
-          borderWidth: 1,
-          callbacks: {
-            label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y > 0 ? '+' : ''}${ctx.parsed.y}%`
-          }
-        }
-      },
-      scales: {
-        x: {
-          ticks: { color: textColor, font: { size: 10 }, autoSkip: false, maxRotation: 30 },
-          grid: { color: gridColor }
-        },
-        y: {
-          ticks: { color: textColor, font: { size: 10 }, callback: v => (v > 0 ? '+' : '') + v + '%' },
-          grid: { color: gridColor }
-        }
-      }
+function getMacroContext(sym, pct) {
+  const ctx = MACRO_CONTEXT[sym];
+  const isGainer = pct > 0;
+  if (ctx) return ctx;
+  // Generic context based on direction
+  if (isGainer) return {
+    theme:'Catalyst or sector momentum',
+    play:'Review recent news for specific catalyst. Check if movement is part of broader sector rotation or company-specific event. Size position based on conviction level.',
+    tag:'watch',tagLabel:'REVIEW CATALYST'
+  };
+  return {
+    theme:'Selling pressure or negative catalyst',
+    play:'Determine if selloff is fundamental or technical. Macro-driven selloffs in quality names often present buying opportunities. Check upcoming earnings.',
+    tag:'watch',tagLabel:'ASSESS BEFORE ACTING'
+  };
+}
+
+function buildMoverCard(q, type) {
+  const pct = q.changesPercentage;
+  const ctx = getMacroContext(q.symbol, pct);
+  const isGain = type === 'gain';
+  return `
+  <div class="mover-card ${type}" data-type="${type}">
+    <div class="mover-top">
+      <div class="mover-left">
+        <div class="mover-ticker">${q.symbol}</div>
+        <div class="mover-name">${q.name || '—'}</div>
+        <div class="mover-sector-tag" style="background:${isGain?'rgba(200,240,106,0.1)':'var(--red-dim)'};color:${isGain?'var(--accent)':'var(--red)'};">${ctx.theme}</div>
+      </div>
+      <div class="mover-right">
+        <div class="mover-pct ${isGain?'gain-text':'lose-text'}">${pct>0?'+':''}${fmt(pct,2)}%</div>
+        <div class="mover-price">$${fmt(q.price,2)}</div>
+        <div class="mover-vol">Vol: ${q.volume ? (q.volume/1e6).toFixed(1)+'M' : '—'}</div>
+      </div>
+    </div>
+    <div class="mover-why">
+      <div class="why-label">Macro context</div>
+      <div class="why-text">${ctx.theme}. Price: <strong style="color:var(--text);">$${fmt(q.price,2)}</strong> · Change: <strong style="color:${isGain?'var(--accent)':'var(--red)'};">${pct>0?'+':''}${fmt(pct,2)}%</strong> · Mkt cap: ${fmtLarge(q.marketCap)}.</div>
+    </div>
+    <div class="mover-play">
+      <div class="play-label">⚡ Historical pattern play</div>
+      <div class="play-text">${ctx.play} <span class="play-tag ${ctx.tag}">${ctx.tagLabel}</span></div>
+    </div>
+  </div>`;
+}
+
+async function loadMovers() {
+  try {
+    const [gainers, losers] = await Promise.all([
+      fmpFetch('/stock_market/gainers'),
+      fmpFetch('/stock_market/losers')
+    ]);
+
+    const gEl = document.getElementById('gainers-container');
+    const lEl = document.getElementById('losers-container');
+
+    if (Array.isArray(gainers) && gainers.length) {
+      gEl.innerHTML = gainers.slice(0,6).map(q => buildMoverCard(q,'gain')).join('');
+    } else {
+      gEl.innerHTML = '<div class="error-text">No gainer data available</div>';
     }
-  });
 
-  // FED PROBABILITY CHART
-  new Chart(document.getElementById('fedChart'), {
-    type: 'bar',
-    data: {
-      labels: ['May', 'Jun', 'Jul', 'Sep', 'Nov', 'Dec'],
-      datasets: [{
-        label: 'Prob of ≥1 cut by meeting',
-        data: [5, 12, 22, 45, 58, 72],
-        backgroundColor: 'rgba(96,165,250,0.6)',
-        borderColor: 'rgba(96,165,250,0.9)',
-        borderWidth: 1,
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          backgroundColor: '#161b21',
-          borderColor: 'rgba(255,255,255,0.1)',
-          borderWidth: 1,
-          callbacks: { label: ctx => ` Cut probability: ${ctx.parsed.y}%` }
-        }
-      },
-      scales: {
-        x: { ticks: { color: textColor, font: { size: 11 } }, grid: { color: gridColor } },
-        y: {
-          min: 0, max: 100,
-          ticks: { color: textColor, font: { size: 11 }, callback: v => v + '%' },
-          grid: { color: gridColor }
-        }
-      }
+    if (Array.isArray(losers) && losers.length) {
+      lEl.innerHTML = losers.slice(0,6).map(q => buildMoverCard(q,'lose')).join('');
+    } else {
+      lEl.innerHTML = '<div class="error-text">No loser data available</div>';
     }
-  });
 
-  // CORRELATION CHART (bubble)
-  new Chart(document.getElementById('correlChart'), {
-    type: 'bubble',
-    data: {
-      datasets: [
-        {
-          label: 'Oil Shock Beneficiaries',
-          data: [
-            { x: 28, y: 22, r: 10 }, // XOM
-            { x: 25, y: 18, r: 8 },  // CVX
-            { x: 18, y: 14, r: 7 },  // MOS
-          ],
-          backgroundColor: 'rgba(200,240,106,0.5)',
-          borderColor: 'rgba(200,240,106,0.8)',
-        },
-        {
-          label: 'Oil Shock Losers',
-          data: [
-            { x: -22, y: 18, r: 9 }, // Airlines
-            { x: -14, y: 12, r: 7 }, // Intl DM
-            { x: -8, y: 6, r: 5 },   // Tech (minor)
-          ],
-          backgroundColor: 'rgba(248,113,113,0.5)',
-          borderColor: 'rgba(248,113,113,0.8)',
-        },
-        {
-          label: 'Rate Pause Plays',
-          data: [
-            { x: 5, y: 12, r: 11 }, // Tech
-            { x: 4, y: 9, r: 8 },   // Financials
-            { x: 2, y: 7, r: 6 },   // Industrials
-          ],
-          backgroundColor: 'rgba(96,165,250,0.5)',
-          borderColor: 'rgba(96,165,250,0.8)',
-        }
-      ]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          display: true,
-          position: 'top',
-          labels: { color: textColor, font: { size: 10 }, boxWidth: 10, padding: 12 }
-        },
-        tooltip: {
-          backgroundColor: '#161b21',
-          borderColor: 'rgba(255,255,255,0.1)',
-          borderWidth: 1,
-        }
-      },
-      scales: {
-        x: {
-          title: { display: true, text: 'Oil shock return (%)', color: textColor, font: { size: 10 } },
-          ticks: { color: textColor, font: { size: 10 }, callback: v => (v > 0 ? '+' : '') + v + '%' },
-          grid: { color: gridColor }
-        },
-        y: {
-          title: { display: true, text: 'Volatility (%)', color: textColor, font: { size: 10 } },
-          ticks: { color: textColor, font: { size: 10 }, callback: v => v + '%' },
-          grid: { color: gridColor }
-        }
-      }
-    }
+    const upd = document.getElementById('movers-updated');
+    if (upd) upd.textContent = `Updated ${nowStr()}`;
+
+  } catch(e) {
+    document.getElementById('gainers-container').innerHTML = `<div class="error-text">Error loading movers: ${e.message}</div>`;
+    document.getElementById('losers-container').innerHTML = `<div class="error-text">Error loading movers</div>`;
+  }
+}
+
+function setMoverFilter(type, el) {
+  document.querySelectorAll('.mover-filter').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.mover-card').forEach(card => {
+    if (type === 'all') card.style.display = '';
+    else card.style.display = card.classList.contains(type) ? '' : 'none';
   });
+}
+
+// ============================================================
+// NEWS FEED
+// ============================================================
+async function loadNews() {
+  try {
+    // General market news
+    const [general, watchlistNews] = await Promise.all([
+      fmpFetch('/stock_news?limit=20'),
+      fmpFetch(`/stock_news?tickers=${Object.keys(MACRO_CONTEXT).join(',')}&limit=20`)
+    ]);
+
+    const newsFeed = document.getElementById('news-feed');
+    const wlFeed  = document.getElementById('watchlist-news');
+
+    function renderNews(items, el) {
+      if (!Array.isArray(items) || !items.length) {
+        el.innerHTML = '<div class="error-text">No news available</div>'; return;
+      }
+      el.innerHTML = items.map(n => `
+        <div class="news-item">
+          <div class="news-meta">
+            <span class="news-ticker-badge">${n.symbol || 'MKT'}</span>
+            <div class="news-time">${timeAgo(n.publishedDate)}</div>
+          </div>
+          <div>
+            <div class="news-headline"><a href="${n.url}" target="_blank" style="color:var(--text);text-decoration:none;">${n.title}</a></div>
+            <div class="news-source">${n.site || '—'}</div>
+          </div>
+        </div>`).join('');
+    }
+
+    renderNews(general, newsFeed);
+    renderNews(watchlistNews, wlFeed);
+
+    const upd = document.getElementById('news-updated');
+    if (upd) upd.textContent = `Updated ${nowStr()}`;
+  } catch(e) {
+    document.getElementById('news-feed').innerHTML = `<div class="error-text">Error loading news: ${e.message}</div>`;
+  }
+}
+
+// ============================================================
+// SECTOR CHART (static — macro analysis layer)
+// ============================================================
+Chart.defaults.font.family = "'DM Mono', monospace";
+Chart.defaults.color = '#6b7280';
+const gridColor = 'rgba(255,255,255,0.07)';
+
+new Chart(document.getElementById('sectorChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Tech/AI','Financials','Defense','US Energy','Airlines','REITs','Gold','Fertilizers','Intl DM'],
+    datasets: [
+      {label:'Fed Pause',data:[12,9,4,5,2,-3,1,3,6],backgroundColor:'rgba(200,240,106,0.75)'},
+      {label:'Oil Shock', data:[-8,-2,15,28,-22,-4,9,18,-14],backgroundColor:'rgba(248,113,113,0.75)'},
+      {label:'Ceasefire', data:[7,5,-6,-12,32,3,-5,-8,18],backgroundColor:'rgba(96,165,250,0.75)'}
+    ]
+  },
+  options: {
+    responsive:true, maintainAspectRatio:false,
+    plugins:{
+      legend:{display:false},
+      tooltip:{
+        backgroundColor:'#161b21',borderColor:'rgba(255,255,255,0.1)',borderWidth:1,
+        callbacks:{label:ctx=>`${ctx.dataset.label}: ${ctx.parsed.y>0?'+':''}${ctx.parsed.y}%`}
+      }
+    },
+    scales:{
+      x:{ticks:{color:'#6b7280',font:{size:10},autoSkip:false,maxRotation:30},grid:{color:gridColor}},
+      y:{ticks:{color:'#6b7280',font:{size:10},callback:v=>(v>0?'+':'')+v+'%'},grid:{color:gridColor}}
+    }
+  }
+});
+
+// ============================================================
+// TAB NAVIGATION
+// ============================================================
+function showTab(name, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  const panel = document.getElementById(`tab-${name}`);
+  if (panel) { panel.classList.add('active'); panel.classList.add('fade-in'); }
+  if (btn) btn.classList.add('active');
+  // Lazy load movers when tab is first opened
+  if (name === 'movers') loadMovers();
+  if (name === 'news') loadNews();
+}
+
+// ============================================================
+// REFRESH ALL
+// ============================================================
+async function refreshAll() {
+  const btn = document.querySelector('.refresh-badge');
+  if (btn) btn.textContent = '↻ REFRESHING...';
+  await Promise.all([loadQuotes(), loadHeatmap()]);
+  if (btn) btn.textContent = '↻ REFRESH NOW';
+}
+
+// ============================================================
+// INIT + AUTO-REFRESH
+// ============================================================
+(async function init() {
+  await Promise.all([loadQuotes(), loadHeatmap()]);
+  // Auto-refresh every 5 minutes
+  setInterval(async () => {
+    await Promise.all([loadQuotes(), loadHeatmap()]);
+    // If movers/news tab is active, refresh those too
+    const activeTab = document.querySelector('.tab-panel.active');
+    if (activeTab && activeTab.id === 'tab-movers') loadMovers();
+    if (activeTab && activeTab.id === 'tab-news') loadNews();
+  }, REFRESH_MS);
+})();
 </script>
 </body>
 </html>
